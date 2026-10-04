@@ -3,252 +3,423 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student Dash - ระบบติดตามการบ้าน</title>
-  <!-- โหลด Tailwind CSS ผ่าน CDN สำหรับจัดสไตล์พาสเทลน่ารัก -->
+  <title>Student Dash - ระบบติดตามงานพาสเทล</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- โหลดฟอนต์ภาษาไทยน่ารักๆ (Mitr / Prompt) -->
   <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Mitr', sans-serif;
-      background-color: #FAF8F5; /* สีครีมอ่อน สบายตา */
+      background-color: #FAF8F5;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #FBCFE8;
+      border-radius: 10px;
     }
   </style>
 </head>
-<body class="text-gray-700 min-h-screen flex p-4 sm:p-6 gap-6">
+<body class="text-gray-700 min-h-screen flex p-3 sm:p-6 gap-6">
 
   <!-- ================= 1. แถบเมนูด้านซ้าย (SIDEBAR) ================= -->
   <aside class="w-64 bg-pink-100/80 backdrop-blur-md rounded-3xl p-5 flex flex-col justify-between shadow-sm border border-pink-200 shrink-0 hidden md:flex">
     <div>
-      <!-- โลโก้ & ชื่อเว็บ -->
       <div class="flex items-center gap-3 mb-8 px-2">
-        <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-xl shadow-xs">🐱</div>
+        <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-xl shadow-xs">🎒</div>
         <div>
           <h1 class="font-bold text-gray-800 text-lg leading-tight">Student Dash</h1>
-          <p class="text-xs text-pink-500">ติดตามงาน & สรุปวิชา</p>
+          <p class="text-xs text-pink-500 font-medium">ระบบตามงานน่ารักๆ ✨</p>
         </div>
       </div>
 
-      <!-- รายการเมนูหลัก -->
       <nav class="space-y-2">
-        <a href="#" class="flex items-center gap-3 px-4 py-3 bg-white text-pink-600 rounded-2xl font-medium shadow-sm transition">
-          <span>📌</span> หน้าแรก (Dashboard)
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition">
-          <span>📚</span> รายวิชาทั้งหมด
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition">
+        <button onclick="showPage('dashboard')" class="w-full flex items-center gap-3 px-4 py-3 bg-white text-pink-600 rounded-2xl font-medium shadow-sm transition text-left">
+          <span>📌</span> หน้าหลักรายวิชา
+        </button>
+        <button onclick="showPage('dashboard')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
+          <span>👥</span> รายชื่อนักเรียน
+        </button>
+        <button onclick="showPage('dashboard')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
           <span>📅</span> ปฏิทินกำหนดส่ง
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition">
-          <span>👥</span> เช็คเพื่อนส่งงาน
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition">
-          <span>💬</span> ส่งการแจ้งเตือน LINE
-        </a>
+        </button>
       </nav>
     </div>
 
-    <!-- ส่วนโปรไฟล์ด้านล่าง -->
     <div class="bg-white/80 p-3 rounded-2xl flex items-center gap-3 border border-pink-100">
-      <div class="w-9 h-9 bg-pink-200 rounded-full flex items-center justify-center text-sm">🎒</div>
+      <div class="w-9 h-9 bg-pink-200 rounded-full flex items-center justify-center text-sm">💖</div>
       <div>
-        <p class="text-sm font-semibold text-gray-800">นักเรียนน่ารัก</p>
-        <p class="text-xs text-gray-400">มัธยมศึกษาปีที่ 1</p>
+        <p class="text-sm font-semibold text-gray-800">หัวหน้าห้องสุดน่ารัก</p>
+        <p class="text-xs text-gray-400">ชั้นมัธยมศึกษาปีที่ 4/1</p>
       </div>
     </div>
   </aside>
 
-  <!-- ================= 2. พื้นที่เนื้อหาหลักด้านขวา (MAIN CONTENT) ================= -->
+  <!-- ================= 2. พื้นที่เนื้อหาหลัก (MAIN CONTENT) ================= -->
   <main class="flex-1 space-y-6">
-    <!-- Header หัวข้อและปุ่มกด -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-3xl shadow-xs border border-gray-100">
-      <div>
-        <h2 class="text-2xl font-bold text-gray-800">วิชาทั้งหมดของฉัน 📖</h2>
-        <p class="text-sm text-gray-400">เช็คสถานะการบ้านและช่วงเวลาส่งงานได้ที่นี่เลย!</p>
+
+    <!-- PAGE 1: หน้าหน้ารวมวิชา (DASHBOARD) -->
+    <div id="dashboardPage" class="space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-3xl shadow-xs border border-gray-100">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">วิชาทั้งหมด 📖</h2>
+          <p class="text-sm text-gray-400">คลิกที่การ์ดวิชาเพื่อเข้าไปติ๊กเช็คชื่อส่งงานเพื่อนได้เลย!</p>
+        </div>
+        <button onclick="openModal('addSubjectModal')" class="flex items-center gap-2 bg-pink-400 hover:bg-pink-500 text-white px-5 py-2.5 rounded-2xl font-medium shadow-md shadow-pink-200 transition transform active:scale-95">
+          <span class="text-lg">+</span> เพิ่มวิชาใหม่
+        </button>
       </div>
-      <!-- ปุ่มกดเปิด Modal เพิ่มวิชาใหม่ -->
-      <button onclick="openModal()" class="flex items-center gap-2 bg-pink-400 hover:bg-pink-500 text-white px-5 py-2.5 rounded-2xl font-medium shadow-md shadow-pink-200 transition transform active:scale-95">
-        <span class="text-lg">+</span> เพิ่มวิชาใหม่
-      </button>
+
+      <!-- รายการการ์ดวิชา -->
+      <div id="subjectGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- จะถูกสร้างผ่าน JavaScript อัตโนมัติ -->
+      </div>
     </div>
 
-    <!-- ตารางการ์ดแสดงวิชา (GRID SYSTEM) -->
-    <div id="subjectGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      
-      <!-- การ์ดวิชาตัวอย่างที่ 1 -->
-      <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition flex flex-col justify-between relative group">
-        <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-4xl bg-pink-50 p-3 rounded-2xl">🧪</span>
-            <span class="px-3 py-1 bg-pink-100 text-pink-600 rounded-full text-xs font-medium">วิทยาศาสตร์</span>
+    <!-- PAGE 2: หน้าเช็คส่งงานในวิชานั้นๆ (SUBJECT DETAIL & TRACKER) -->
+    <div id="subjectDetailPage" class="hidden space-y-6">
+      <!-- Header ปุ่มย้อนกลับ & ชื่อวิชา -->
+      <div class="bg-white p-5 rounded-3xl shadow-xs border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex items-center gap-4">
+          <button onclick="showPage('dashboard')" class="w-10 h-10 bg-pink-50 hover:bg-pink-100 text-pink-500 rounded-2xl flex items-center justify-center transition font-bold text-lg">
+            ←
+          </button>
+          <div>
+            <div class="flex items-center gap-2">
+              <span id="detailEmoji" class="text-2xl">🧪</span>
+              <h2 id="detailTitle" class="text-2xl font-bold text-gray-800">วิชาเคมี</h2>
+            </div>
+            <p id="detailDates" class="text-xs text-gray-400 mt-0.5">🗓️ กำหนดส่ง: 10 ต.ค. 2026</p>
           </div>
-          <h3 class="font-bold text-lg text-gray-800 mb-1">เคมี (Chemistry)</h3>
-          <p class="text-xs text-gray-400 mb-4">🗓️ เริ่ม 1 ต.ค. - สิ้นสุด 10 ต.ค.</p>
         </div>
-        <div>
-          <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
-            <span>ส่งงานแล้ว</span>
-            <span>75%</span>
-          </div>
-          <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-            <div class="bg-pink-400 h-full rounded-full" style="width: 75%"></div>
-          </div>
+
+        <div class="flex gap-2 w-full sm:w-auto">
+          <button onclick="openModal('addStudentModal')" class="flex-1 sm:flex-none bg-purple-100 hover:bg-purple-200 text-purple-600 px-4 py-2.5 rounded-2xl text-sm font-medium transition">
+            + เพิ่มนักเรียน
+          </button>
+          <button onclick="copyUnsentList()" class="flex-1 sm:flex-none bg-green-400 hover:bg-green-500 text-white px-4 py-2.5 rounded-2xl text-sm font-medium shadow-md shadow-green-100 transition flex items-center justify-center gap-1">
+            💬 ก๊อปปี้ทวงงาน LINE
+          </button>
         </div>
       </div>
 
-      <!-- การ์ดวิชาตัวอย่างที่ 2 -->
-      <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition flex flex-col justify-between">
-        <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-4xl bg-blue-50 p-3 rounded-2xl">📐</span>
-            <span class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">คณิตศาสตร์</span>
-          </div>
-          <h3 class="font-bold text-lg text-gray-800 mb-1">คณิตศาสตร์พื้นฐาน</h3>
-          <p class="text-xs text-gray-400 mb-4">🗓️ เริ่ม 3 ต.ค. - สิ้นสุด 12 ต.ค.</p>
+      <!-- การ์ดสรุปสถานะส่งงาน -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="bg-white p-4 rounded-3xl border border-gray-100 text-center shadow-xs">
+          <p class="text-xs text-gray-400 mb-1">นักเรียนทั้งหมด</p>
+          <p id="totalCount" class="text-2xl font-bold text-gray-700">0</p>
         </div>
-        <div>
-          <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
-            <span>ส่งงานแล้ว</span>
-            <span>60%</span>
-          </div>
-          <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-            <div class="bg-blue-400 h-full rounded-full" style="width: 60%"></div>
-          </div>
+        <div class="bg-emerald-50 p-4 rounded-3xl border border-emerald-100 text-center shadow-xs">
+          <p class="text-xs text-emerald-600 mb-1">ส่งแล้ว 🟢</p>
+          <p id="submittedCount" class="text-2xl font-bold text-emerald-600">0</p>
+        </div>
+        <div class="bg-rose-50 p-4 rounded-3xl border border-rose-100 text-center shadow-xs">
+          <p class="text-xs text-rose-500 mb-1">ยังไม่ส่ง 🔴</p>
+          <p id="pendingCount" class="text-2xl font-bold text-rose-500">0</p>
         </div>
       </div>
 
-      <!-- การ์ดวิชาตัวอย่างที่ 3 -->
-      <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition flex flex-col justify-between">
-        <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-4xl bg-purple-50 p-3 rounded-2xl">🎨</span>
-            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-xs font-medium">ศิลปะ</span>
-          </div>
-          <h3 class="font-bold text-lg text-gray-800 mb-1">ศิลปะและการออกแบบ</h3>
-          <p class="text-xs text-gray-400 mb-4">🗓️ เริ่ม 5 ต.ค. - สิ้นสุด 15 ต.ค.</p>
-        </div>
-        <div>
-          <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
-            <span>ส่งงานแล้ว</span>
-            <span>40%</span>
-          </div>
-          <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-            <div class="bg-purple-400 h-full rounded-full" style="width: 40%"></div>
-          </div>
+      <!-- รายชื่อเพื่อนสำหรับติ๊กส่งงาน -->
+      <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs">
+        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <span>📋</span> รายชื่อส่งงาน
+        </h3>
+        <div id="studentList" class="space-y-3 max-h-[450px] overflow-y-auto pr-1 custom-scrollbar">
+          <!-- รายชื่อจะถูกเรนเดอร์ตรงนี้ -->
         </div>
       </div>
-
-      <!-- ปุ่มเพิ่มวิชาแบบการ์ดประเด็นพิเศษ -->
-      <div onclick="openModal()" class="border-2 border-dashed border-pink-200 bg-pink-50/30 hover:bg-pink-50 p-5 rounded-3xl flex flex-col items-center justify-center cursor-pointer transition min-h-[200px] text-pink-400 hover:text-pink-500">
-        <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl shadow-xs mb-2">+</div>
-        <p class="font-medium text-sm">กดที่นี่เพื่อเพิ่มวิชาใหม่</p>
-      </div>
-
     </div>
+
   </main>
 
-  <!-- ================= 3. POPUP MODAL สำหรับกรอกเพิ่มวิชา ================= -->
-  <div id="addModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
-    <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100 transform transition-all">
+  <!-- ================= MODAL: เพิ่มวิชาใหม่ ================= -->
+  <div id="addSubjectModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-bold text-gray-800">✨ เพิ่มรายวิชาใหม่</h3>
-        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+        <button onclick="closeModal('addSubjectModal')" class="text-gray-400 text-xl font-bold">&times;</button>
       </div>
-
-      <form id="addSubjectForm" onsubmit="addNewSubject(event)" class="space-y-4">
-        <!-- กรอกชื่อวิชา -->
+      <form onsubmit="createSubject(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-medium text-gray-600 mb-1">ชื่อวิชา</label>
-          <input type="text" id="subjectName" required placeholder="เช่น ภาษาไทย, ฟิสิกส์" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
+          <input type="text" id="subName" required placeholder="เช่น เคมี, ฟิสิกส์, ภาษาอังกฤษ" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
         </div>
-
-        <!-- เลือกหมวดหมู่ & อิโมจิ -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1">อิโมจิประจำวิชา</label>
-            <input type="text" id="subjectEmoji" required placeholder="เช่น 📚, ⚽, 💻" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-pink-300">
+            <label class="block text-xs font-medium text-gray-600 mb-1">อิโมจิ (3D/Cute)</label>
+            <input type="text" id="subEmoji" required placeholder="🧪, 📚, 📐" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-pink-300">
           </div>
           <div>
             <label class="block text-xs font-medium text-gray-600 mb-1">หมวดหมู่</label>
-            <input type="text" id="subjectCategory" placeholder="เช่น ภาษา, กีฬา" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
+            <input type="text" id="subCategory" placeholder="วิทย์, ศิลป์" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
           </div>
         </div>
-
-        <!-- เลือกช่วงเวลาเริ่ม - สิ้นสุด -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1">วันที่เริ่ม</label>
-            <input type="date" id="startDate" required class="w-full border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-pink-300">
+            <label class="block text-xs font-medium text-gray-600 mb-1">วันเริ่มงาน</label>
+            <input type="date" id="subStart" required class="w-full border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-pink-300">
           </div>
           <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1">วันที่สิ้นสุด</label>
-            <input type="date" id="endDate" required class="w-full border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-pink-300">
+            <label class="block text-xs font-medium text-gray-600 mb-1">วันกำหนดส่ง</label>
+            <input type="date" id="subEnd" required class="w-full border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-pink-300">
           </div>
         </div>
-
-        <!-- ปุ่มกดยืนยัน -->
-        <div class="flex gap-2 pt-3">
-          <button type="button" onclick="closeModal()" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-medium transition">ยกเลิก</button>
-          <button type="submit" class="flex-1 py-2.5 bg-pink-400 hover:bg-pink-500 text-white rounded-xl text-sm font-medium shadow-md shadow-pink-100 transition">บันทึกรายวิชา</button>
-        </div>
+        <button type="submit" class="w-full py-2.5 bg-pink-400 hover:bg-pink-500 text-white rounded-xl text-sm font-medium shadow-md shadow-pink-100 transition mt-2">
+          บันทึกรายวิชา
+        </button>
       </form>
     </div>
   </div>
 
-  <!-- ================= 4. JAVASCRIPT สำหรับทำงานกับระบบ ================= -->
+  <!-- ================= MODAL: เพิ่มนักเรียน ================= -->
+  <div id="addStudentModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-gray-800">👤 เพิ่มเพื่อนในห้อง</h3>
+        <button onclick="closeModal('addStudentModal')" class="text-gray-400 text-xl font-bold">&times;</button>
+      </div>
+      <form onsubmit="createStudent(event)" class="space-y-4">
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">เลขที่</label>
+            <input type="number" id="stdNo" required placeholder="1" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-300">
+          </div>
+          <div class="col-span-2">
+            <label class="block text-xs font-medium text-gray-600 mb-1">ชื่อ-นามสกุล / ชื่อเล่น</label>
+            <input type="text" id="stdName" required placeholder="นายสมชาย ใจดี" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-300">
+          </div>
+        </div>
+        <button type="submit" class="w-full py-2.5 bg-purple-400 hover:bg-purple-500 text-white rounded-xl text-sm font-medium shadow-md shadow-purple-100 transition mt-2">
+          + เพิ่มชื่อเพื่อน
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT ================= -->
   <script>
-    const modal = document.getElementById('addModal');
-    const subjectGrid = document.getElementById('subjectGrid');
+    // ข้อมูลจำลองตั้งต้น
+    let subjects = [
+      { id: 1, name: 'วิชาเคมีเพิ่มเติม', emoji: '🧪', category: 'วิทยาศาสตร์', start: '2026-10-01', end: '2026-10-10' },
+      { id: 2, name: 'คณิตศาสตร์พื้นฐาน', emoji: '📐', category: 'คณิตศาสตร์', start: '2026-10-02', end: '2026-10-15' },
+      { id: 3, name: 'ภาษาอังกฤษฟัง-พูด', emoji: '🗣️', category: 'ภาษา', start: '2026-10-05', end: '2026-10-20' }
+    ];
 
-    function openModal() {
-      modal.classList.remove('hidden');
+    let students = [
+      { id: 101, no: 1, name: 'นายกิตติพงษ์ สุขใจ' },
+      { id: 102, no: 2, name: 'นางสาวจินตนา มารยาท' },
+      { id: 103, no: 3, name: 'นายชินวัตร มีทรัพย์' },
+      { id: 104, no: 4, name: 'นางสาวณิชา น่ารัก' }
+    ];
+
+    // สถานะการส่งงาน: { subjectId: { studentId: true/false } }
+    let submissionStatus = {
+      1: { 101: true, 102: false, 103: true, 104: false }
+    };
+
+    let currentSubjectId = null;
+
+    // สลับหน้าจอ
+    function showPage(page) {
+      if (page === 'dashboard') {
+        document.getElementById('dashboardPage').classList.remove('hidden');
+        document.getElementById('subjectDetailPage').classList.add('hidden');
+        renderSubjects();
+      } else if (page === 'detail') {
+        document.getElementById('dashboardPage').classList.add('hidden');
+        document.getElementById('subjectDetailPage').classList.remove('hidden');
+      }
     }
 
-    function closeModal() {
-      modal.classList.add('hidden');
-      document.getElementById('addSubjectForm').reset();
-    }
+    // แสดงการ์ดวิชาหน้า Dashboard
+    function renderSubjects() {
+      const grid = document.getElementById('subjectGrid');
+      grid.innerHTML = '';
 
-    // ฟังก์ชันเพิ่มการ์ดวิชาใหม่เข้าสู่หน้าเว็บ
-    function addNewSubject(event) {
-      event.preventDefault();
+      subjects.forEach(sub => {
+        // คำนวณเปอร์เซ็นต์
+        const subStatus = submissionStatus[sub.id] || {};
+        const total = students.length;
+        const submitted = Object.values(subStatus).filter(Boolean).length;
+        const percent = total > 0 ? Math.round((submitted / total) * 100) : 0;
 
-      const name = document.getElementById('subjectName').value;
-      const emoji = document.getElementById('subjectEmoji').value || '📖';
-      const category = document.getElementById('subjectCategory').value || 'ทั่วไป';
-      const startDate = document.getElementById('startDate').value;
-      const endDate = document.getElementById('endDate').value;
+        const card = document.createElement('div');
+        card.className = 'bg-white p-5 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition cursor-pointer flex flex-col justify-between group';
+        card.onclick = () => openSubjectDetail(sub.id);
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start mb-3">
+              <span class="text-4xl bg-pink-50 group-hover:scale-110 transition transform p-3 rounded-2xl">${sub.emoji}</span>
+              <span class="px-3 py-1 bg-pink-100 text-pink-600 rounded-full text-xs font-medium">${sub.category}</span>
+            </div>
+            <h3 class="font-bold text-lg text-gray-800 mb-1 group-hover:text-pink-500 transition">${sub.name}</h3>
+            <p class="text-xs text-gray-400 mb-4">🗓️ เริ่ม ${sub.start} - สิ้นสุด ${sub.end}</p>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
+              <span>ส่งงานแล้ว (${submitted}/${total} คน)</span>
+              <span>${percent}%</span>
+            </div>
+            <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-pink-400 h-full rounded-full transition-all duration-300" style="width: ${percent}%"></div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
 
-      // สร้างองค์ประกอบ HTML ของการ์ดวิชาใหม่
-      const newCard = document.createElement('div');
-      newCard.className = 'bg-white p-5 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition flex flex-col justify-between';
-      newCard.innerHTML = `
-        <div>
-          <div class="flex justify-between items-start mb-3">
-            <span class="text-4xl bg-yellow-50 p-3 rounded-2xl">${emoji}</span>
-            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">${category}</span>
-          </div>
-          <h3 class="font-bold text-lg text-gray-800 mb-1">${name}</h3>
-          <p class="text-xs text-gray-400 mb-4">🗓️ เริ่ม ${startDate} - สิ้นสุด ${endDate}</p>
-        </div>
-        <div>
-          <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
-            <span>ส่งงานแล้ว</span>
-            <span>0%</span>
-          </div>
-          <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-            <div class="bg-yellow-400 h-full rounded-full" style="width: 0%"></div>
-          </div>
-        </div>
+      // ปุ่มการ์ดเพิ่มวิชาใหม่
+      const addCard = document.createElement('div');
+      addCard.onclick = () => openModal('addSubjectModal');
+      addCard.className = 'border-2 border-dashed border-pink-200 bg-pink-50/30 hover:bg-pink-50 p-5 rounded-3xl flex flex-col items-center justify-center cursor-pointer transition min-h-[200px] text-pink-400 hover:text-pink-500';
+      addCard.innerHTML = `
+        <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl shadow-xs mb-2">+</div>
+        <p class="font-medium text-sm">กดที่นี่เพื่อเพิ่มวิชาใหม่</p>
       `;
-
-      // แทรกการ์ดใหม่ไปไว้ก่อนหน้าปุ่ม "+ เพิ่มวิชาใหม่"
-      const lastChild = subjectGrid.lastElementChild;
-      subjectGrid.insertBefore(newCard, lastChild);
-
-      closeModal();
+      grid.appendChild(addCard);
     }
+
+    // เปิดเข้ามาดูรายละเอียดวิชา
+    function openSubjectDetail(id) {
+      currentSubjectId = id;
+      const sub = subjects.find(s => s.id === id);
+      if (!sub) return;
+
+      document.getElementById('detailEmoji').textContent = sub.emoji;
+      document.getElementById('detailTitle').textContent = sub.name;
+      document.getElementById('detailDates').textContent = `🗓️ สิ้นสุดกำหนดส่ง: ${sub.end}`;
+
+      if (!submissionStatus[id]) {
+        submissionStatus[id] = {};
+      }
+
+      renderStudentList();
+      showPage('detail');
+    }
+
+    // แสดงรายชื่อเพื่อนพร้อมปุ่มติ๊ก
+    function renderStudentList() {
+      const container = document.getElementById('studentList');
+      container.innerHTML = '';
+
+      const currentStatus = submissionStatus[currentSubjectId] || {};
+      let submittedCount = 0;
+
+      // เรียงตามเลขที่
+      students.sort((a, b) => a.no - b.no);
+
+      students.forEach(std => {
+        const isSubmitted = !!currentStatus[std.id];
+        if (isSubmitted) submittedCount++;
+
+        const item = document.createElement('div');
+        item.className = `p-3.5 rounded-2xl border transition flex justify-between items-center ${
+          isSubmitted ? 'bg-emerald-50/60 border-emerald-200' : 'bg-gray-50/60 border-gray-100'
+        }`;
+
+        item.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-white flex items-center justify-center font-bold text-xs ${
+              isSubmitted ? 'text-emerald-600 shadow-xs' : 'text-gray-400'
+            }">
+              ${std.no}
+            </span>
+            <span class="font-medium text-sm ${isSubmitted ? 'text-emerald-900 line-through decoration-emerald-300' : 'text-gray-700'}">
+              ${std.name}
+            </span>
+          </div>
+          <button onclick="toggleSubmit(${std.id})" class="px-4 py-1.5 rounded-xl text-xs font-semibold shadow-xs transition ${
+            isSubmitted 
+              ? 'bg-emerald-500 text-white hover:bg-emerald-600' 
+              : 'bg-white border border-rose-200 text-rose-500 hover:bg-rose-50'
+          }">
+            ${isSubmitted ? '✓ ส่งแล้ว' : '✕ ยังไม่ส่ง'}
+          </button>
+        `;
+        container.appendChild(item);
+      });
+
+      // อัปเดตตัวเลขสรุป
+      document.getElementById('totalCount').textContent = students.length;
+      document.getElementById('submittedCount').textContent = submittedCount;
+      document.getElementById('pendingCount').textContent = students.length - submittedCount;
+    }
+
+    // กดสลับสถานะ ติ๊กส่งงาน / ไม่ส่งงาน
+    function toggleSubmit(studentId) {
+      if (!submissionStatus[currentSubjectId]) {
+        submissionStatus[currentSubjectId] = {};
+      }
+      submissionStatus[currentSubjectId][studentId] = !submissionStatus[currentSubjectId][studentId];
+      renderStudentList();
+    }
+
+    // สร้างวิชาใหม่
+    function createSubject(e) {
+      e.preventDefault();
+      const newSub = {
+        id: Date.now(),
+        name: document.getElementById('subName').value,
+        emoji: document.getElementById('subEmoji').value || '📖',
+        category: document.getElementById('subCategory').value || 'ทั่วไป',
+        start: document.getElementById('subStart').value,
+        end: document.getElementById('subEnd').value
+      };
+      subjects.push(newSub);
+      closeModal('addSubjectModal');
+      renderSubjects();
+      e.target.reset();
+    }
+
+    // เพิ่มรายชื่อเพื่อน
+    function createStudent(e) {
+      e.preventDefault();
+      const newStd = {
+        id: Date.now(),
+        no: parseInt(document.getElementById('stdNo').value),
+        name: document.getElementById('stdName').value
+      };
+      students.push(newStd);
+      closeModal('addStudentModal');
+      renderStudentList();
+      e.target.reset();
+    }
+
+    // ก๊อปปี้ข้อความทวงงานเข้า LINE / Messenger
+    function copyUnsentList() {
+      const sub = subjects.find(s => s.id === currentSubjectId);
+      const currentStatus = submissionStatus[currentSubjectId] || {};
+      
+      const unsentStudents = students.filter(std => !currentStatus[std.id]);
+
+      if (unsentStudents.length === 0) {
+        alert('🎉 เย้! เพื่อนทุกคนส่งงานวิชานี้ครบเรียบร้อยแล้วครับ');
+        return;
+      }
+
+      let text = `📢 แจ้งเตือนส่งการบ้านวิชา ${sub ? sub.name : ''} ${sub ? sub.emoji : ''}\n`;
+      text += `⏰ กำหนดส่ง: ${sub ? sub.end : ''}\n`;
+      text += `----------------------------------\n`;
+      text += `⚠️ เพื่อนๆ ที่ยังไม่ได้ส่งงาน (${unsentStudents.length} คน):\n`;
+      
+      unsentStudents.forEach(std => {
+        text += `• เลขที่ ${std.no} : ${std.name}\n`;
+      });
+      
+      text += `----------------------------------\n`;
+      text += `👉 รบกวนรีบส่งงานด้วยนะค้าบ ✨`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert('📋 คัดลอกข้อความทวงงานเรียบร้อยแล้ว! สามารถนำไปวางลงในกลุ่ม LINE หรือ Messenger ได้เลยครับ');
+      });
+    }
+
+    // จัดการ Popup Modal
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    // เริ่มต้นทำงาน
+    renderSubjects();
   </script>
 </body>
 </html>

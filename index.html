@@ -40,10 +40,14 @@
       background-color: #fff1f2;
     }
 
-    /* Animation สำหรับน้องสัตว์เลี้ยง Little Companion */
+    /* Animation สำหรับแมวส้มและน้องบัวน้อย */
     @keyframes petBounce {
       0%, 100% { transform: translateY(0) scale(1); }
       50% { transform: translateY(-8px) scale(1.03); }
+    }
+    @keyframes lotusFloat {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
     }
     @keyframes heartFloat {
       0% { opacity: 1; transform: translateY(0) scale(0.8); }
@@ -51,6 +55,9 @@
     }
     .animate-pet {
       animation: petBounce 3s ease-in-out infinite;
+    }
+    .animate-lotus {
+      animation: lotusFloat 4s ease-in-out infinite;
     }
     .floating-heart {
       position: absolute;
@@ -72,7 +79,7 @@
         </div>
       </div>
 
-      <!-- เมนูหลัก 4 หัวข้อ -->
+      <!-- เมนูหลัก 5 หัวข้อ -->
       <nav class="space-y-2">
         <button id="navTasks" onclick="switchTab('tasks')" class="w-full flex items-center gap-3 px-4 py-3 bg-white text-pink-600 rounded-2xl font-medium shadow-sm transition text-left">
           <span>📌</span> 1. งานทั้งหมด (Tasks)
@@ -85,6 +92,9 @@
         </button>
         <button id="navMusic" onclick="switchTab('music')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
           <span>☕</span> 4. เพลงชิวๆ คาเฟ่
+        </button>
+        <button id="navLotus" onclick="switchTab('lotus')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
+          <span>🪷</span> 5. น้องบัวน้อย (Lotus Pet)
         </button>
       </nav>
     </div>
@@ -100,11 +110,12 @@
   </aside>
 
   <!-- Navigation Bar สำหรับหน้าจอขนาดเล็ก (Mobile Bottom Bar) -->
-  <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-pink-100 p-2 flex justify-around md:hidden z-40">
-    <button onclick="switchTab('tasks')" class="text-xs flex flex-col items-center gap-1 p-1 text-pink-500 font-medium"><span>📌</span> งาน</button>
-    <button onclick="switchTab('calendar')" class="text-xs flex flex-col items-center gap-1 p-1 text-gray-500"><span>📅</span> ปฏิทิน</button>
-    <button onclick="switchTab('study')" class="text-xs flex flex-col items-center gap-1 p-1 text-gray-500"><span>⏱️</span> อ่านหนังสือ</button>
-    <button onclick="switchTab('music')" class="text-xs flex flex-col items-center gap-1 p-1 text-gray-500"><span>☕</span> เพลง</button>
+  <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-pink-100 p-2 flex justify-around md:hidden z-40 text-[10px]">
+    <button onclick="switchTab('tasks')" class="flex flex-col items-center gap-1 p-1 text-pink-500 font-medium"><span>📌</span> งาน</button>
+    <button onclick="switchTab('calendar')" class="flex flex-col items-center gap-1 p-1 text-gray-500"><span>📅</span> ปฏิทิน</button>
+    <button onclick="switchTab('study')" class="flex flex-col items-center gap-1 p-1 text-gray-500"><span>⏱️</span> อ่านหนังสือ</button>
+    <button onclick="switchTab('music')" class="flex flex-col items-center gap-1 p-1 text-gray-500"><span>☕</span> เพลง</button>
+    <button onclick="switchTab('lotus')" class="flex flex-col items-center gap-1 p-1 text-gray-500"><span>🪷</span> บัวน้อย</button>
   </div>
 
   <!-- ================= 2. พื้นที่เนื้อหาหลัก (MAIN CONTENT) ================= -->
@@ -195,19 +206,15 @@
         </button>
       </div>
 
-      <!-- ส่วนแสดงปฏิทินเต็มเดือน -->
       <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs">
         <div id="calendarContainer"></div>
       </div>
 
-      <!-- รายการการบ้านทั้งหมด -->
       <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs space-y-4">
         <h3 class="font-bold text-gray-800 text-lg mb-2 flex items-center gap-2">
           <span>📌</span> รายการการบ้าน / สิ่งที่ต้องทำทั้งหมด
         </h3>
-        <div id="hwList" class="space-y-3">
-          <!-- รายการการบ้านจะเรนเดอร์ตรงนี้ -->
-        </div>
+        <div id="hwList" class="space-y-3"></div>
       </div>
     </div>
 
@@ -215,13 +222,11 @@
     <div id="tabStudy" class="hidden space-y-6">
       <div class="bg-white p-5 rounded-3xl shadow-xs border border-gray-100">
         <h2 class="text-2xl font-bold text-gray-800">จับเวลาอ่านหนังสือ ⏱️</h2>
-        <p class="text-sm text-gray-400">ตั้งเวลาโฟกัสอ่านหนังสือ พักผ่อนสายตา และเก็บบันทึกสถิติความขยัน!</p>
+        <p class="text-sm text-gray-400">อ่านหนังสือสะสมเวลา เพื่อรับดาว ✨ นำไปแต่งตัวให้น้องบัวน้อย!</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- กล่องตั้งเวลา & นาฬิกานับถอยหลัง -->
         <div class="lg:col-span-2 bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-xs flex flex-col items-center justify-center text-center space-y-6">
-          
           <div class="flex gap-3">
             <button id="modeStudyBtn" onclick="setTimerMode('study')" class="px-5 py-2 rounded-2xl font-medium text-sm bg-pink-400 text-white shadow-sm transition">
               📖 โหมดอ่านหนังสือ
@@ -231,13 +236,11 @@
             </button>
           </div>
 
-          <!-- ตัวเลขเวลาแสดงผลใหญ่ -->
           <div class="relative w-64 h-64 bg-pink-50 rounded-full border-8 border-pink-200 flex flex-col items-center justify-center shadow-inner">
             <span id="timerDisplay" class="text-5xl font-extrabold text-pink-500 tracking-wider">25:00</span>
             <span id="timerStatusLabel" class="text-xs font-semibold text-pink-400 mt-2">เตรียมพร้อมโฟกัส</span>
           </div>
 
-          <!-- ปรับแต่งตั้งเวลา -->
           <div class="flex items-center gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-100">
             <div>
               <label class="text-[11px] font-medium text-gray-500 block">เวลาอ่าน (นาที)</label>
@@ -253,7 +256,6 @@
             </button>
           </div>
 
-          <!-- ปุ่มควบคุม -->
           <div class="flex gap-4">
             <button id="btnStartTimer" onclick="startTimer()" class="bg-pink-400 hover:bg-pink-500 text-white px-8 py-3 rounded-2xl font-semibold shadow-md shadow-pink-200 transition transform active:scale-95 text-lg">
               ▶️ เริ่มจับเวลา
@@ -265,23 +267,19 @@
               🔄 รีเซ็ต
             </button>
           </div>
-
         </div>
 
-        <!-- กล่องเก็บสถิติการอ่าน -->
         <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs flex flex-col justify-between space-y-6">
           <div>
             <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
               <span>📊</span> สถิติการอ่านหนังสือ
             </h3>
 
-            <!-- สรุปรวมเวลา -->
             <div class="bg-gradient-to-br from-pink-400 to-purple-400 text-white p-5 rounded-2xl shadow-md mb-4 text-center">
               <p class="text-xs font-medium opacity-90">อ่านสะสมรวมทั้งหมด</p>
               <p id="totalStudyTime" class="text-3xl font-extrabold mt-1">0 นาที</p>
             </div>
 
-            <!-- ประวัติการอ่าน -->
             <h4 class="text-xs font-semibold text-gray-500 mb-2">ประวัติโฟกัสล่าสุด</h4>
             <div id="studyHistoryList" class="space-y-2 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
               <p class="text-xs text-gray-400 text-center py-4">ยังไม่มีประวัติการอ่านหนังสือ</p>
@@ -303,7 +301,6 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- เครื่องเล่นเพลงหลัก -->
         <div class="md:col-span-2 bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-xs flex flex-col items-center justify-center text-center space-y-6">
           <div class="w-32 h-32 bg-pink-100 rounded-3xl flex items-center justify-center text-6xl shadow-inner border border-pink-200 animate-pulse">
             ☕
@@ -313,16 +310,13 @@
             <p id="currentTrackArtist" class="text-xs text-pink-500 mt-1 font-medium">เสียงบรรยากาศคาเฟ่อบอุ่น</p>
           </div>
 
-          <!-- HTML5 Audio Element -->
           <audio id="audioPlayer" class="w-full max-w-md mt-2" controls autoplay loop>
             <source id="audioSource" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
-            เบราว์เซอร์ของคุณไม่รองรับการเล่นเสียง
           </audio>
 
           <p class="text-xs text-gray-400">💡 คุณสามารถกดเปิดเพลงทิ้งไว้ แล้วสลับไปหน้าจดการบ้านหรือจับเวลาอ่านหนังสือได้เลย!</p>
         </div>
 
-        <!-- รายการเพลงคาเฟ่ -->
         <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs space-y-4">
           <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
             <span>📻</span> เลือกเพลย์ลิสต์
@@ -344,7 +338,7 @@
               </div>
             </button>
 
-            <button onclick="playTrack('https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3', 'Cozy Coffee Shop Study', 'ดนตรีอะคูสติกเบาๆ เสริมสมาธิ')", class="w-full text-left p-3 rounded-2xl hover:bg-gray-50 transition border border-gray-100 flex items-center gap-3">
+            <button onclick="playTrack('https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3', 'Cozy Coffee Shop Study', 'ดนตรีอะคูสติกเบาๆ เสริมสมาธิ')" class="w-full text-left p-3 rounded-2xl hover:bg-gray-50 transition border border-gray-100 flex items-center gap-3">
               <span class="text-xl">🎸</span>
               <div>
                 <p class="text-xs font-bold text-gray-800">Cozy Coffee Shop</p>
@@ -356,31 +350,81 @@
       </div>
     </div>
 
+    <!-- TAB 5: น้องบัวน้อย LOTUS PET (NEW TAB!) -->
+    <div id="tabLotus" class="hidden space-y-6">
+      <div class="bg-white p-5 rounded-3xl shadow-xs border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">น้องบัวน้อย 🪷🌸</h2>
+          <p class="text-sm text-gray-400">ยิ่งอ่านหนังสือเยอะ ยิ่งได้ดาวปลดล็อกชุดและไอเทมสุดคิ้วท์!</p>
+        </div>
+        <!-- แต้มและเลเวล -->
+        <div class="flex items-center gap-3 bg-pink-50 px-4 py-2 rounded-2xl border border-pink-100">
+          <span class="text-sm font-bold text-pink-600">✨ ดาวสะสม: <span id="lotusStars">0</span> ดวง</span>
+          <span class="text-xs font-semibold bg-pink-400 text-white px-2.5 py-1 rounded-xl">Lv. <span id="lotusLevel">1</span></span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- เวทีแสดงตัวน้องบัวน้อย -->
+        <div class="bg-gradient-to-b from-pink-50 to-white p-8 rounded-3xl border border-pink-100 shadow-xs flex flex-col items-center justify-center text-center space-y-4 relative">
+          
+          <!-- กล่องเปลี่ยนชื่อ -->
+          <div class="flex items-center gap-2 bg-white/80 px-3 py-1.5 rounded-2xl border border-pink-200 shadow-2xs">
+            <span id="lotusNameDisplay" class="font-bold text-gray-800 text-base">น้องบัวน้อย</span>
+            <button onclick="changeLotusName()" class="text-xs text-pink-500 hover:text-pink-600 font-semibold bg-pink-100 px-2 py-0.5 rounded-lg">✏️ เปลี่ยนชื่อ</button>
+          </div>
+
+          <!-- ตัวน้องบัวน้อย และเครื่องแต่งกาย -->
+          <div class="relative my-6 w-40 h-40 flex items-center justify-center bg-white rounded-full border-4 border-pink-200 shadow-inner animate-lotus">
+            <span id="equippedItem" class="absolute -top-4 text-3xl"></span> <!-- หมวก / ไอเทมบนหัว -->
+            <span id="lotusBase" class="text-7xl">🪷</span> <!-- ร่างหลักน้องบัวน้อย -->
+            <span id="equippedOutfit" class="absolute -bottom-2 text-3xl"></span> <!-- ชุด/พร็อพด้านล่าง -->
+          </div>
+
+          <p class="text-xs text-gray-500 bg-white/90 px-4 py-2 rounded-xl border border-pink-100">
+            💡 อ่านหนังสือสะสมครบทุก 10 นาที จะได้รับ <b class="text-pink-500">10 ดาว ✨</b>
+          </p>
+        </div>
+
+        <!-- ร้านค้าปลดล็อกชุดและไอเทม -->
+        <div class="lg:col-span-2 bg-white p-6 rounded-3xl border border-gray-100 shadow-xs space-y-4">
+          <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">
+            <span>🛍️</span> ร้านค้าชุดและไอเทมของแต่งตัว
+          </h3>
+
+          <div id="shopList" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[380px] overflow-y-auto pr-1 custom-scrollbar">
+            <!-- เรนเดอร์รายการสินค้าผ่าน JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
-  <!-- ================= 3. LITTLE LOVE COMPANION (น้องสัตว์เลี้ยงฮีลใจ - เคลื่อนย้ายได้ Drag & Drop) ================= -->
+  <!-- ================= 3. LITTLE ORANGE CAT COMPANION (น้องแมวส้มฮีลใจ - Drag & Drop) ================= -->
   <div id="draggablePet" class="fixed bottom-16 md:bottom-6 right-6 z-50 flex flex-col items-end cursor-move select-none touch-none">
     
-    <!-- กล่องข้อความฮีลใจ (Love Bubble) - ซ่อนไว้ก่อน จะแสดงเมื่อกดลูบหัวเท่านั้น -->
+    <!-- กล่องข้อความฮีลใจ (Love Bubble) -->
     <div id="petBubble" class="hidden pointer-events-auto bg-white/95 backdrop-blur-md border border-pink-200 shadow-lg px-4 py-2.5 rounded-2xl rounded-br-none mb-2 max-w-[200px] text-center transition-all duration-300 transform scale-100">
       <p id="petSpeech" class="text-xs font-medium text-pink-600 leading-relaxed">
         วันนี้สู้ๆ นะครับ! เค้าเป็นกำลังใจให้ ✨
       </p>
     </div>
 
-    <!-- ตัวน้องสัตว์เลี้ยง -->
+    <!-- ตัวน้องแมวส้ม -->
     <div id="petContainer" onclick="petAnimal()" class="pointer-events-auto cursor-pointer relative group flex flex-col items-center">
       <div id="petAvatar" class="text-5xl animate-pet select-none hover:scale-110 transition transform filter drop-shadow-md">
-        🐱
+        🐱🍊
       </div>
-      <span class="text-[10px] font-bold text-gray-400 bg-white/80 px-2 py-0.5 rounded-full shadow-2xs mt-1 border border-pink-100 group-hover:text-pink-500 transition">
-        กดลูบหัว / ลากได้ 💖
+      <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full shadow-2xs mt-1 border border-amber-200 group-hover:text-amber-700 transition">
+        น้องแมวส้ม / ลากได้ 💖
       </span>
     </div>
 
   </div>
 
-  <!-- ================= MODAL: เพิ่มวิชาใหม่ ================= -->
+  <!-- ================= MODALS ================= -->
+  <!-- MODAL: เพิ่มวิชาใหม่ -->
   <div id="addSubjectModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
     <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100">
       <div class="flex justify-between items-center mb-4">
@@ -426,7 +470,7 @@
     </div>
   </div>
 
-  <!-- ================= MODAL: เพิ่มนักเรียน ================= -->
+  <!-- MODAL: เพิ่มนักเรียน -->
   <div id="addStudentModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
     <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100">
       <div class="flex justify-between items-center mb-4">
@@ -451,7 +495,7 @@
     </div>
   </div>
 
-  <!-- ================= MODAL: จดการบ้านใหม่ ================= -->
+  <!-- MODAL: จดการบ้านใหม่ -->
   <div id="addHwModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
     <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100">
       <div class="flex justify-between items-center mb-4">
@@ -493,26 +537,42 @@
     let calendarObj = null;
 
     // --- Study Timer State ---
-    let timerMode = 'study'; // 'study' หรือ 'break'
+    let timerMode = 'study';
     let timerInterval = null;
-    let timeLeft = 25 * 60; // วินาที
+    let timeLeft = 25 * 60;
     let studyHistory = [];
     let totalMinutesStudied = 0;
 
-    // --- Little Love Companion State & Speech Quotes ---
+    // --- Lotus Pet State (น้องบัวน้อย) ---
+    let lotusName = "น้องบัวน้อย";
+    let lotusStars = 0;
+    let lotusLevel = 1;
+    let equippedHead = "";
+    let equippedBody = "";
+
+    const lotusShopItems = [
+      { id: 'item1', name: 'มงกุฎเจ้าหญิง', icon: '👑', type: 'head', price: 20, unlocked: false },
+      { id: 'item2', name: 'หมวดเรียนเก่ง', icon: '🎓', type: 'head', price: 40, unlocked: false },
+      { id: 'item3', name: 'โบว์สีชมพูฟรุ้งฟริ้ง', icon: '🎀', type: 'head', price: 10, unlocked: false },
+      { id: 'item4', name: 'แว่นตาขยันอ่านหนังสือ', icon: '👓', type: 'head', price: 15, unlocked: false },
+      { id: 'item5', name: 'ชุดดาววิบวับ', icon: '⭐', type: 'body', price: 30, unlocked: false },
+      { id: 'item6', name: 'กระเป๋านักเรียนจิ๋ว', icon: '🎒', type: 'body', price: 50, unlocked: false }
+    ];
+
+    // --- Orange Cat Quotes ---
     const loveQuotes = [
-      "วันนี้สู้ๆ นะครับ! เค้าเป็นกำลังใจให้ ✨",
+      "วันนี้สู้ๆ นะครับ! แมวส้มเป็นกำลังใจให้ ✨",
       "พักสายตาสักแป๊บ แล้วค่อยลุยต่อนะ ☕",
       "คุณเก่งมากๆ แล้วนะวันนี้! ❤️",
       "อย่าลืมดื่มน้ำเยอะๆ นะครับ 🥛",
       "ค่อยๆ ทำไปทีละงาน เดี๋ยวก็เสร็จแล้ว! 💪",
-      "เค้าคอยเชียร์อยู่ตรงนี้นะ งึดๆ 🐱💕",
+      "แมวส้มคอยเชียร์อยู่ตรงนี้นะ เหมียว~ 🐱🍊",
       "คนเก่งอ่านหนังสือเหนื่อยรึยังน้า ~ 🌸"
     ];
 
     const petQuotes = [
-      "งับๆ~ ขอบคุณที่ลูบหัวเค้านะ! 💖",
-      "แง้ว! เค้าชอบคุณที่สุดเลย 💕",
+      "เหมียว~ ขอบคุณที่ลูบหัวแมวส้มนะ! 💖",
+      "แง้ว! แมวส้มชอบคุณที่สุดเลย 💕",
       "ลูบอีกๆ ขอกำลังใจให้เธอเหมือนกันนะ 🐾",
       "ฟินจังเลย~ ลุยอ่านหนังสือต่อกันนะ ✨"
     ];
@@ -526,24 +586,20 @@
       bubble.classList.remove('hidden');
       speech.textContent = text;
 
-      // ซ่อนข้อความอัตโนมัติหลังจากแสดงผล 4 วินาที
       if (petSpeechTimeout) clearTimeout(petSpeechTimeout);
       petSpeechTimeout = setTimeout(() => {
         bubble.classList.add('hidden');
       }, 4000);
     }
 
-    // ฟังก์ชันเมื่อคลิกลูบหัวน้องแมว
     function petAnimal() {
-      // สุ่มข้อความให้กำลังใจเฉพาะตอนคลิกเท่านั้น
       const randomQuote = [...loveQuotes, ...petQuotes][Math.floor(Math.random() * (loveQuotes.length + petQuotes.length))];
       updatePetSpeech(randomQuote);
 
-      // สร้างเอฟเฟกต์หัวใจลอยขึ้นมา
       const petContainer = document.getElementById('petContainer');
       const heart = document.createElement('div');
       heart.className = 'floating-heart text-2xl';
-      heart.textContent = ['💖', '💕', '🌸', '✨', '🐾'][Math.floor(Math.random() * 5)];
+      heart.textContent = ['💖', '🍊', '🌸', '✨', '🐾'][Math.floor(Math.random() * 5)];
       heart.style.left = `${Math.random() * 40}px`;
       heart.style.top = '-10px';
       
@@ -551,7 +607,7 @@
       setTimeout(() => heart.remove(), 1200);
     }
 
-    // --- ระบบลากน้องแมว (Drag and Drop System) ---
+    // Drag and Drop
     const dragItem = document.getElementById("draggablePet");
     let active = false;
     let currentX, currentY, initialX, initialY;
@@ -604,14 +660,15 @@
       el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
     }
 
-    // --- Switch Tab System ---
+    // Switch Tab System
     function switchTab(tab) {
       document.getElementById('tabTasks').classList.add('hidden');
       document.getElementById('tabCalendar').classList.add('hidden');
       document.getElementById('tabStudy').classList.add('hidden');
       document.getElementById('tabMusic').classList.add('hidden');
+      document.getElementById('tabLotus').classList.add('hidden');
 
-      ['Tasks', 'Calendar', 'Study', 'Music'].forEach(t => {
+      ['Tasks', 'Calendar', 'Study', 'Music', 'Lotus'].forEach(t => {
         const btn = document.getElementById('nav' + t);
         if (btn) btn.className = "w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left";
       });
@@ -630,10 +687,12 @@
         document.getElementById('tabStudy').classList.remove('hidden');
       } else if (tab === 'music') {
         document.getElementById('tabMusic').classList.remove('hidden');
+      } else if (tab === 'lotus') {
+        document.getElementById('tabLotus').classList.remove('hidden');
+        renderLotusTab();
       }
     }
 
-    // ระบบเพลง
     function playTrack(url, title, artist) {
       const player = document.getElementById('audioPlayer');
       const source = document.getElementById('audioSource');
@@ -644,24 +703,84 @@
       document.getElementById('currentTrackArtist').textContent = artist;
     }
 
-    setInterval(() => {
-      const now = new Date();
-      const currentIsoStr = now.toISOString().slice(0, 16);
+    // --- TAB 5: Lotus Pet Functions ---
+    function renderLotusTab() {
+      document.getElementById('lotusNameDisplay').textContent = lotusName;
+      document.getElementById('lotusStars').textContent = lotusStars;
+      document.getElementById('lotusLevel').textContent = lotusLevel;
 
-      subjects.forEach(sub => {
-        if (sub.alertTime && sub.alertTime === currentIsoStr && !sub.alerted) {
-          sub.alerted = true;
-          if (Notification.permission === "granted") {
-            new Notification(`🚨 แจ้งเตือนส่งงาน: วิชา ${sub.name} ${sub.emoji}`, {
-              body: `วันนี้ถึงกำหนดส่งงานวิชา ${sub.name} แล้วอย่าลืมทวงงานเพื่อนๆ นะครับ!`,
-              icon: '🎒'
-            });
-          } else {
-            alert(`🚨 แจ้งเตือนส่งงาน: วิชา ${sub.name} ถึงกำหนดแล้วครับ!`);
-          }
-        }
+      document.getElementById('equippedItem').textContent = equippedHead;
+      document.getElementById('equippedOutfit').textContent = equippedBody;
+
+      renderShopItems();
+    }
+
+    function changeLotusName() {
+      const newName = prompt("ตั้งชื่อให้น้องบัวน้อย:", lotusName);
+      if (newName && newName.trim() !== "") {
+        lotusName = newName.trim();
+        renderLotusTab();
+        updatePetSpeech(`เปลี่ยนชื่อน้องบัวน้อยเป็น "${lotusName}" เรียบร้อยแล้ว! 🌸`);
+      }
+    }
+
+    function renderShopItems() {
+      const container = document.getElementById('shopList');
+      container.innerHTML = '';
+
+      lotusShopItems.forEach(item => {
+        const isEquipped = (item.type === 'head' && equippedHead === item.icon) || (item.type === 'body' && equippedBody === item.icon);
+        const card = document.createElement('div');
+        card.className = "p-4 rounded-2xl border border-gray-100 bg-pink-50/30 flex items-center justify-between";
+        
+        card.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-3xl p-2 bg-white rounded-2xl shadow-2xs">${item.icon}</span>
+            <div>
+              <p class="font-bold text-gray-800 text-sm">${item.name}</p>
+              <p class="text-xs text-pink-500 font-medium">✨ ${item.price} ดาว</p>
+            </div>
+          </div>
+          <div>
+            ${item.unlocked 
+              ? `<button onclick="equipLotusItem('${item.id}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold ${isEquipped ? 'bg-pink-500 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'}">
+                  ${isEquipped ? '✓ สวมรู้อยู่' : 'สวมใส่'}
+                 </button>`
+              : `<button onclick="buyLotusItem('${item.id}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-pink-400 hover:bg-pink-500 text-white shadow-xs">
+                  ปลดล็อก
+                 </button>`
+            }
+          </div>
+        `;
+        container.appendChild(card);
       });
-    }, 10000);
+    }
+
+    function buyLotusItem(itemId) {
+      const item = lotusShopItems.find(i => i.id === itemId);
+      if (!item) return;
+
+      if (lotusStars >= item.price) {
+        lotusStars -= item.price;
+        item.unlocked = true;
+        equipLotusItem(itemId);
+        alert(`🎉 ปลดล็อก "${item.name}" สำเร็จ! สวมใส่ให้น้องบัวน้อยเรียบร้อยแล้ว`);
+      } else {
+        alert(`✨ ดาวของคุณไม่พอ (ต้องการ ${item.price} ดาว)! ไปอ่านหนังสือสะสมดาวกันนะ`);
+      }
+    }
+
+    function equipLotusItem(itemId) {
+      const item = lotusShopItems.find(i => i.id === itemId);
+      if (!item || !item.unlocked) return;
+
+      if (item.type === 'head') {
+        equippedHead = equippedHead === item.icon ? '' : item.icon;
+      } else {
+        equippedBody = equippedBody === item.icon ? '' : item.icon;
+      }
+      renderLotusTab();
+    }
 
     // --- TAB 1: Tasks Functions ---
     function renderSubjects() {
@@ -717,7 +836,7 @@
 
       document.getElementById('detailEmoji').textContent = sub.emoji;
       document.getElementById('detailTitle').textContent = sub.name;
-      document.getElementById('detailDates').textContent = `🗓️ สิ้นสุดกำหนดส่ง: ${sub.end}`;
+      document.getElementById('detailDates').textContent = `🗓️️ สิ้นสุดกำหนดส่ง: ${sub.end}`;
 
       document.getElementById('subjectGridView').classList.add('hidden');
       document.getElementById('subjectDetailView').classList.remove('hidden');
@@ -997,7 +1116,7 @@
       if (timerInterval) return;
 
       document.getElementById('btnStartTimer').classList.add('opacity-50', 'pointer-events-none');
-      updatePetSpeech("สู้ๆ น้า! เค้าจะนั่งเฝ้าอยู่ข้างๆ ตรงนี้ 🤫💖");
+      updatePetSpeech("สู้ๆ น้า! แมวส้มจะนั่งเฝ้าอยู่ข้างๆ ตรงนี้ 🤫💖");
 
       timerInterval = setInterval(() => {
         if (timeLeft > 0) {
@@ -1012,13 +1131,18 @@
             const studyMins = parseInt(document.getElementById('inputStudyMin').value) || 25;
             totalMinutesStudied += studyMins;
             
+            // เพิ่มดาวให้น้องบัวน้อย (ทุก 10 นาทีได้ 10 ดาว)
+            const earnedStars = Math.floor(studyMins / 10) * 10 || 5;
+            lotusStars += earnedStars;
+            lotusLevel = Math.floor(totalMinutesStudied / 30) + 1;
+
             const now = new Date();
             const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
             studyHistory.unshift({ minutes: studyMins, time: timeStr });
 
             renderStudyHistory();
-            updatePetSpeech("เย้!! อ่านจบแล้ว เก่งที่สุดเลยคนเก่ง 🎉❤️");
-            alert('🎉 หมดเวลาอ่านหนังสือแล้วครับ! พักผ่อนสักครู่นะ');
+            updatePetSpeech(`เย้!! อ่านจบแล้ว ได้รับ ✨ ${earnedStars} ดาว แต่งตัวให้น้องบัวน้อย 🎉❤️️`);
+            alert(`🎉 หมดเวลาอ่านหนังสือแล้วครับ! คุณได้รับ ✨ ${earnedStars} ดาว สำหรับน้องบัวน้อย!`);
             setTimerMode('break');
           } else {
             updatePetSpeech("หมดเวลาพักแล้ว ปรบมือต้อนรับความตั้งใจอีกรอบ! ✨");
@@ -1073,7 +1197,7 @@
       }
     }
 
-    // --- Modal Helpers ---
+    // Modal Helpers
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 

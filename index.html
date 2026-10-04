@@ -61,7 +61,7 @@
 </head>
 <body class="text-gray-700 min-h-screen flex p-3 sm:p-6 gap-6 relative">
 
-  <!-- ================= 1. เมนูด้านข้างซ้าย (SIDEBAR) 3 หัวข้อ ================= -->
+  <!-- ================= 1. เมนูด้านข้างซ้าย (SIDEBAR) ================= -->
   <aside class="w-64 bg-pink-100/80 backdrop-blur-md rounded-3xl p-5 flex flex-col justify-between shadow-sm border border-pink-200 shrink-0 hidden md:flex">
     <div>
       <div class="flex items-center gap-3 mb-8 px-2">
@@ -72,7 +72,7 @@
         </div>
       </div>
 
-      <!-- เมนู 3 หัวข้อหลัก -->
+      <!-- เมนูหลัก 4 หัวข้อ -->
       <nav class="space-y-2">
         <button id="navTasks" onclick="switchTab('tasks')" class="w-full flex items-center gap-3 px-4 py-3 bg-white text-pink-600 rounded-2xl font-medium shadow-sm transition text-left">
           <span>📌</span> 1. งานทั้งหมด (Tasks)
@@ -81,7 +81,10 @@
           <span>📅</span> 2. ปฏิทินการบ้าน
         </button>
         <button id="navStudy" onclick="switchTab('study')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
-          <span>⏱️️</span> 3. จับเวลาอ่านหนังสือ
+          <span>⏱</span> 3. จับเวลาอ่านหนังสือ
+        </button>
+        <button id="navMusic" onclick="switchTab('music')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
+          <span>☕</span> 4. เพลงชิวๆ คาเฟ่
         </button>
       </nav>
     </div>
@@ -101,6 +104,7 @@
     <button onclick="switchTab('tasks')" class="text-xs flex flex-col items-center gap-1 p-1 text-pink-500 font-medium"><span>📌</span> งาน</button>
     <button onclick="switchTab('calendar')" class="text-xs flex flex-col items-center gap-1 p-1 text-gray-500"><span>📅</span> ปฏิทิน</button>
     <button onclick="switchTab('study')" class="text-xs flex flex-col items-center gap-1 p-1 text-gray-500"><span>⏱️</span> อ่านหนังสือ</button>
+    <button onclick="switchTab('music')" class="text-xs flex flex-col items-center gap-1 p-1 text-gray-500"><span>☕</span> เพลง</button>
   </div>
 
   <!-- ================= 2. พื้นที่เนื้อหาหลัก (MAIN CONTENT) ================= -->
@@ -291,13 +295,74 @@
       </div>
     </div>
 
+    <!-- TAB 4: เพลงชิวๆ คาเฟ่ (MUSIC PLAYER) -->
+    <div id="tabMusic" class="hidden space-y-6">
+      <div class="bg-white p-5 rounded-3xl shadow-xs border border-gray-100">
+        <h2 class="text-2xl font-bold text-gray-800">มุมเพลงชิวๆ คาเฟ่ ☕🎵</h2>
+        <p class="text-sm text-gray-400">เปิดฟังเพลงบรรยากาศคาเฟ่นุ่มๆ เพิ่มสมาธิในการอ่านหนังสือและการทำงาน</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- เครื่องเล่นเพลงหลัก -->
+        <div class="md:col-span-2 bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-xs flex flex-col items-center justify-center text-center space-y-6">
+          <div class="w-32 h-32 bg-pink-100 rounded-3xl flex items-center justify-center text-6xl shadow-inner border border-pink-200 animate-pulse">
+            ☕
+          </div>
+          <div>
+            <h3 id="currentTrackTitle" class="text-xl font-bold text-gray-800">Cafe Jazz & Chill Lofi</h3>
+            <p id="currentTrackArtist" class="text-xs text-pink-500 mt-1 font-medium">เสียงบรรยากาศคาเฟ่อบอุ่น</p>
+          </div>
+
+          <!-- HTML5 Audio Element -->
+          <audio id="audioPlayer" class="w-full max-w-md mt-2" controls autoplay loop>
+            <source id="audioSource" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+            เบราว์เซอร์ของคุณไม่รองรับการเล่นเสียง
+          </audio>
+
+          <p class="text-xs text-gray-400">💡 คุณสามารถกดเปิดเพลงทิ้งไว้ แล้วสลับไปหน้าจดการบ้านหรือจับเวลาอ่านหนังสือได้เลย!</p>
+        </div>
+
+        <!-- รายการเพลงคาเฟ่ -->
+        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs space-y-4">
+          <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
+            <span>📻</span> เลือกเพลย์ลิสต์
+          </h3>
+          <div class="space-y-2">
+            <button onclick="playTrack('https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3', 'Cafe Jazz & Chill Lofi', 'เสียงบรรยากาศคาเฟ่อบอุ่น')" class="w-full text-left p-3 rounded-2xl bg-pink-50 hover:bg-pink-100 transition border border-pink-100 flex items-center gap-3">
+              <span class="text-xl">🎷</span>
+              <div>
+                <p class="text-xs font-bold text-gray-800">Cafe Jazz & Chill</p>
+                <p class="text-[10px] text-gray-400">แจ๊สและลูฟายฟินๆ</p>
+              </div>
+            </button>
+
+            <button onclick="playTrack('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3', 'Rainy Day Cafe Piano', 'เสียงเปียโนเคล้าเสียงฝนตกเบาๆ')" class="w-full text-left p-3 rounded-2xl hover:bg-gray-50 transition border border-gray-100 flex items-center gap-3">
+              <span class="text-xl">🌧️</span>
+              <div>
+                <p class="text-xs font-bold text-gray-800">Rainy Day Cafe Piano</p>
+                <p class="text-[10px] text-gray-400">เปียโนคาเฟ่วันฝนตก</p>
+              </div>
+            </button>
+
+            <button onclick="playTrack('https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3', 'Cozy Coffee Shop Study', 'ดนตรีอะคูสติกเบาๆ เสริมสมาธิ')", class="w-full text-left p-3 rounded-2xl hover:bg-gray-50 transition border border-gray-100 flex items-center gap-3">
+              <span class="text-xl">🎸</span>
+              <div>
+                <p class="text-xs font-bold text-gray-800">Cozy Coffee Shop</p>
+                <p class="text-[10px] text-gray-400">อะคูสติกฟีลร้านกาแฟ</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
-  <!-- ================= 3. LITTLE LOVE COMPANION (น้องสัตว์เลี้ยงฮีลใจ) ================= -->
-  <div class="fixed bottom-16 md:bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+  <!-- ================= 3. LITTLE LOVE COMPANION (น้องสัตว์เลี้ยงฮีลใจ - เคลื่อนย้ายได้ Drag & Drop) ================= -->
+  <div id="draggablePet" class="fixed bottom-16 md:bottom-6 right-6 z-50 flex flex-col items-end cursor-move select-none touch-none">
     
-    <!-- กล่องข้อความฮีลใจ (Love Bubble) -->
-    <div id="petBubble" class="pointer-events-auto bg-white/95 backdrop-blur-md border border-pink-200 shadow-lg px-4 py-2.5 rounded-2xl rounded-br-none mb-2 max-w-[200px] text-center transition-all duration-300 transform scale-100">
+    <!-- กล่องข้อความฮีลใจ (Love Bubble) - ซ่อนไว้ก่อน จะแสดงเมื่อกดลูบหัวเท่านั้น -->
+    <div id="petBubble" class="hidden pointer-events-auto bg-white/95 backdrop-blur-md border border-pink-200 shadow-lg px-4 py-2.5 rounded-2xl rounded-br-none mb-2 max-w-[200px] text-center transition-all duration-300 transform scale-100">
       <p id="petSpeech" class="text-xs font-medium text-pink-600 leading-relaxed">
         วันนี้สู้ๆ นะครับ! เค้าเป็นกำลังใจให้ ✨
       </p>
@@ -309,7 +374,7 @@
         🐱
       </div>
       <span class="text-[10px] font-bold text-gray-400 bg-white/80 px-2 py-0.5 rounded-full shadow-2xs mt-1 border border-pink-100 group-hover:text-pink-500 transition">
-        กดลูบหัวน้อง 💖
+        กดลูบหัว / ลากได้ 💖
       </span>
     </div>
 
@@ -452,28 +517,27 @@
       "ฟินจังเลย~ ลุยอ่านหนังสือต่อกันนะ ✨"
     ];
 
-    // สุ่มเปลี่ยนข้อความให้กำลังใจอัตโนมัติ
-    setInterval(() => {
-      if (!timerInterval) { // เปลี่ยนข้อความเมื่อไม่ได้เปิดนาฬิกา
-        const randomQuote = loveQuotes[Math.floor(Math.random() * loveQuotes.length)];
-        updatePetSpeech(randomQuote);
-      }
-    }, 10000);
+    let petSpeechTimeout = null;
 
     function updatePetSpeech(text) {
       const speech = document.getElementById('petSpeech');
       const bubble = document.getElementById('petBubble');
-      bubble.classList.add('scale-90', 'opacity-50');
-      setTimeout(() => {
-        speech.textContent = text;
-        bubble.classList.remove('scale-90', 'opacity-50');
-      }, 150);
+      
+      bubble.classList.remove('hidden');
+      speech.textContent = text;
+
+      // ซ่อนข้อความอัตโนมัติหลังจากแสดงผล 4 วินาที
+      if (petSpeechTimeout) clearTimeout(petSpeechTimeout);
+      petSpeechTimeout = setTimeout(() => {
+        bubble.classList.add('hidden');
+      }, 4000);
     }
 
-    // ฟังก์ชันเมื่อคลิกลูบหัวน้อง
+    // ฟังก์ชันเมื่อคลิกลูบหัวน้องแมว
     function petAnimal() {
-      const randomPetQuote = petQuotes[Math.floor(Math.random() * petQuotes.length)];
-      updatePetSpeech(randomPetQuote);
+      // สุ่มข้อความให้กำลังใจเฉพาะตอนคลิกเท่านั้น
+      const randomQuote = [...loveQuotes, ...petQuotes][Math.floor(Math.random() * (loveQuotes.length + petQuotes.length))];
+      updatePetSpeech(randomQuote);
 
       // สร้างเอฟเฟกต์หัวใจลอยขึ้นมา
       const petContainer = document.getElementById('petContainer');
@@ -487,13 +551,67 @@
       setTimeout(() => heart.remove(), 1200);
     }
 
+    // --- ระบบลากน้องแมว (Drag and Drop System) ---
+    const dragItem = document.getElementById("draggablePet");
+    let active = false;
+    let currentX, currentY, initialX, initialY;
+    let xOffset = 0, yOffset = 0;
+
+    dragItem.addEventListener("touchstart", dragStart, false);
+    dragItem.addEventListener("touchend", dragEnd, false);
+    dragItem.addEventListener("touchmove", drag, false);
+
+    dragItem.addEventListener("mousedown", dragStart, false);
+    document.addEventListener("mouseup", dragEnd, false);
+    document.addEventListener("mousemove", drag, false);
+
+    function dragStart(e) {
+      if (e.type === "touchstart") {
+        initialX = e.touches[0].clientX - xOffset;
+        initialY = e.touches[0].clientY - yOffset;
+      } else {
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+      }
+      if (e.target.closest('#draggablePet')) {
+        active = true;
+      }
+    }
+
+    function dragEnd() {
+      initialX = currentX;
+      initialY = currentY;
+      active = false;
+    }
+
+    function drag(e) {
+      if (active) {
+        e.preventDefault();
+        if (e.type === "touchmove") {
+          currentX = e.touches[0].clientX - initialX;
+          currentY = e.touches[0].clientY - initialY;
+        } else {
+          currentX = e.clientX - initialX;
+          currentY = e.clientY - initialY;
+        }
+        xOffset = currentX;
+        yOffset = currentY;
+        setTranslate(currentX, currentY, dragItem);
+      }
+    }
+
+    function setTranslate(xPos, yPos, el) {
+      el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+    }
+
     // --- Switch Tab System ---
     function switchTab(tab) {
       document.getElementById('tabTasks').classList.add('hidden');
       document.getElementById('tabCalendar').classList.add('hidden');
       document.getElementById('tabStudy').classList.add('hidden');
+      document.getElementById('tabMusic').classList.add('hidden');
 
-      ['Tasks', 'Calendar', 'Study'].forEach(t => {
+      ['Tasks', 'Calendar', 'Study', 'Music'].forEach(t => {
         const btn = document.getElementById('nav' + t);
         if (btn) btn.className = "w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left";
       });
@@ -504,16 +622,26 @@
       if (tab === 'tasks') {
         document.getElementById('tabTasks').classList.remove('hidden');
         renderSubjects();
-        updatePetSpeech("มาตรวจดูงานวิชาต่างๆ กันเถอะครับ ✨");
       } else if (tab === 'calendar') {
         document.getElementById('tabCalendar').classList.remove('hidden');
         renderCalendar();
         renderHomeworks();
-        updatePetSpeech("เช็คการบ้านในปฏิทินกันเถอะ! 📅");
       } else if (tab === 'study') {
         document.getElementById('tabStudy').classList.remove('hidden');
-        updatePetSpeech("พร้อมนั่งอ่านหนังสือไปด้วยกันยังครับ? ⏱️");
+      } else if (tab === 'music') {
+        document.getElementById('tabMusic').classList.remove('hidden');
       }
+    }
+
+    // ระบบเพลง
+    function playTrack(url, title, artist) {
+      const player = document.getElementById('audioPlayer');
+      const source = document.getElementById('audioSource');
+      source.src = url;
+      player.load();
+      player.play();
+      document.getElementById('currentTrackTitle').textContent = title;
+      document.getElementById('currentTrackArtist').textContent = artist;
     }
 
     setInterval(() => {
@@ -667,7 +795,7 @@
     function toggleSubmit(studentId) {
       submissionStatus[currentSubjectId][studentId] = !submissionStatus[currentSubjectId][studentId];
       renderStudentList();
-      petAnimal(); // ร้องขอบคุณเวลาติ๊กงาน
+      petAnimal();
     }
 
     function deleteStudent(studentId) {
@@ -712,7 +840,6 @@
       e.target.reset();
     }
 
-    // คัดลอกข้อความทวงงานเข้า LINE
     function copyUnsentList() {
       const sub = subjects.find(s => s.id === currentSubjectId);
       const currentStatus = submissionStatus[currentSubjectId] || {};
@@ -844,14 +971,12 @@
         label.textContent = "เตรียมพร้อมโฟกัสอ่านหนังสือ";
         const mins = parseInt(document.getElementById('inputStudyMin').value) || 25;
         timeLeft = mins * 60;
-        updatePetSpeech("ตั้งสติ แล้วเริ่มอ่านหนังสือกันเลย! 📖");
       } else {
         breakBtn.className = "px-5 py-2 rounded-2xl font-medium text-sm bg-emerald-400 text-white shadow-sm transition";
         studyBtn.className = "px-5 py-2 rounded-2xl font-medium text-sm bg-gray-100 text-gray-600 hover:bg-gray-200 transition";
         label.textContent = "ได้เวลาพักผ่อนสายตา";
         const mins = parseInt(document.getElementById('inputBreakMin').value) || 5;
         timeLeft = mins * 60;
-        updatePetSpeech("ได้เวลาพักผ่อนแล้ว ยืดเส้นยืดสายหน่อยนะ ☕");
       }
       updateTimerDisplay();
     }

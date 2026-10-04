@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dash - ระบบติดตามการบ้าน</title>
+  <!-- โหลด Tailwind CSS ผ่าน CDN สำหรับจัดสไตล์พาสเทลน่ารัก -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- โหลดฟอนต์ภาษาไทยน่ารักๆ (Mitr / Prompt) -->
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Mitr', sans-serif;
+      background-color: #FAF8F5; /* สีครีมอ่อน สบายตา */
+    }
+  </style>
+</head>
+<body class="text-gray-700 min-h-screen flex p-4 sm:p-6 gap-6">
+
+  <!-- ================= 1. แถบเมนูด้านซ้าย (SIDEBAR) ================= -->
+  <aside class="w-64 bg-pink-100/80 backdrop-blur-md rounded-3xl p-5 flex flex-col justify-between shadow-sm border border-pink-200 shrink-0 hidden md:flex">
+    <div>
+      <!-- โลโก้ & ชื่อเว็บ -->
+      <div class="flex items-center gap-3 mb-8 px-2">
+        <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-xl shadow-xs">🐱</div>
+        <div>
+          <h1 class="font-bold text-gray-800 text-lg leading-tight">Student Dash</h1>
+          <p class="text-xs text-pink-500">ติดตามงาน & สรุปวิชา</p>
+        </div>
+      </div>
+
+      <!-- รายการเมนูหลัก -->
+      <nav class="space-y-2">
+        <a href="#" class="flex items-center gap-3 px-4 py-3 bg-white text-pink-600 rounded-2xl font-medium shadow-sm transition">
+          <span>📌</span> หน้าแรก (Dashboard)
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition">
+          <span>📚</span> รายวิชาทั้งหมด
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition">
+          <span>📅</span> ปฏิทินกำหนดส่ง
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition">
+          <span>👥</span> เช็คเพื่อนส่งงาน
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition">
+          <span>💬</span> ส่งการแจ้งเตือน LINE
+        </a>
+      </nav>
+    </div>
+
+    <!-- ส่วนโปรไฟล์ด้านล่าง -->
+    <div class="bg-white/80 p-3 rounded-2xl flex items-center gap-3 border border-pink-100">
+      <div class="w-9 h-9 bg-pink-200 rounded-full flex items-center justify-center text-sm">🎒</div>
+      <div>
+        <p class="text-sm font-semibold text-gray-800">นักเรียนน่ารัก</p>
+        <p class="text-xs text-gray-400">มัธยมศึกษาปีที่ 1</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= 2. พื้นที่เนื้อหาหลักด้านขวา (MAIN CONTENT) ================= -->
+  <main class="flex-1 space-y-6">
+    <!-- Header หัวข้อและปุ่มกด -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-3xl shadow-xs border border-gray-100">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">วิชาทั้งหมดของฉัน 📖</h2>
+        <p class="text-sm text-gray-400">เช็คสถานะการบ้านและช่วงเวลาส่งงานได้ที่นี่เลย!</p>
+      </div>
+      <!-- ปุ่มกดเปิด Modal เพิ่มวิชาใหม่ -->
+      <button onclick="openModal()" class="flex items-center gap-2 bg-pink-400 hover:bg-pink-500 text-white px-5 py-2.5 rounded-2xl font-medium shadow-md shadow-pink-200 transition transform active:scale-95">
+        <span class="text-lg">+</span> เพิ่มวิชาใหม่
+      </button>
+    </div>
+
+    <!-- ตารางการ์ดแสดงวิชา (GRID SYSTEM) -->
+    <div id="subjectGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      
+      <!-- การ์ดวิชาตัวอย่างที่ 1 -->
+      <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition flex flex-col justify-between relative group">
+        <div>
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-4xl bg-pink-50 p-3 rounded-2xl">🧪</span>
+            <span class="px-3 py-1 bg-pink-100 text-pink-600 rounded-full text-xs font-medium">วิทยาศาสตร์</span>
+          </div>
+          <h3 class="font-bold text-lg text-gray-800 mb-1">เคมี (Chemistry)</h3>
+          <p class="text-xs text-gray-400 mb-4">🗓️ เริ่ม 1 ต.ค. - สิ้นสุด 10 ต.ค.</p>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
+            <span>ส่งงานแล้ว</span>
+            <span>75%</span>
+          </div>
+          <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-pink-400 h-full rounded-full" style="width: 75%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ดวิชาตัวอย่างที่ 2 -->
+      <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-4xl bg-blue-50 p-3 rounded-2xl">📐</span>
+            <span class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">คณิตศาสตร์</span>
+          </div>
+          <h3 class="font-bold text-lg text-gray-800 mb-1">คณิตศาสตร์พื้นฐาน</h3>
+          <p class="text-xs text-gray-400 mb-4">🗓️ เริ่ม 3 ต.ค. - สิ้นสุด 12 ต.ค.</p>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
+            <span>ส่งงานแล้ว</span>
+            <span>60%</span>
+          </div>
+          <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-blue-400 h-full rounded-full" style="width: 60%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ดวิชาตัวอย่างที่ 3 -->
+      <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-4xl bg-purple-50 p-3 rounded-2xl">🎨</span>
+            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-xs font-medium">ศิลปะ</span>
+          </div>
+          <h3 class="font-bold text-lg text-gray-800 mb-1">ศิลปะและการออกแบบ</h3>
+          <p class="text-xs text-gray-400 mb-4">🗓️ เริ่ม 5 ต.ค. - สิ้นสุด 15 ต.ค.</p>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
+            <span>ส่งงานแล้ว</span>
+            <span>40%</span>
+          </div>
+          <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-purple-400 h-full rounded-full" style="width: 40%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ปุ่มเพิ่มวิชาแบบการ์ดประเด็นพิเศษ -->
+      <div onclick="openModal()" class="border-2 border-dashed border-pink-200 bg-pink-50/30 hover:bg-pink-50 p-5 rounded-3xl flex flex-col items-center justify-center cursor-pointer transition min-h-[200px] text-pink-400 hover:text-pink-500">
+        <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl shadow-xs mb-2">+</div>
+        <p class="font-medium text-sm">กดที่นี่เพื่อเพิ่มวิชาใหม่</p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= 3. POPUP MODAL สำหรับกรอกเพิ่มวิชา ================= -->
+  <div id="addModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100 transform transition-all">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-gray-800">✨ เพิ่มรายวิชาใหม่</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="addSubjectForm" onsubmit="addNewSubject(event)" class="space-y-4">
+        <!-- กรอกชื่อวิชา -->
+        <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1">ชื่อวิชา</label>
+          <input type="text" id="subjectName" required placeholder="เช่น ภาษาไทย, ฟิสิกส์" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
+        </div>
+
+        <!-- เลือกหมวดหมู่ & อิโมจิ -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">อิโมจิประจำวิชา</label>
+            <input type="text" id="subjectEmoji" required placeholder="เช่น 📚, ⚽, 💻" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-pink-300">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">หมวดหมู่</label>
+            <input type="text" id="subjectCategory" placeholder="เช่น ภาษา, กีฬา" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
+          </div>
+        </div>
+
+        <!-- เลือกช่วงเวลาเริ่ม - สิ้นสุด -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">วันที่เริ่ม</label>
+            <input type="date" id="startDate" required class="w-full border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-pink-300">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">วันที่สิ้นสุด</label>
+            <input type="date" id="endDate" required class="w-full border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-pink-300">
+          </div>
+        </div>
+
+        <!-- ปุ่มกดยืนยัน -->
+        <div class="flex gap-2 pt-3">
+          <button type="button" onclick="closeModal()" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-medium transition">ยกเลิก</button>
+          <button type="submit" class="flex-1 py-2.5 bg-pink-400 hover:bg-pink-500 text-white rounded-xl text-sm font-medium shadow-md shadow-pink-100 transition">บันทึกรายวิชา</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= 4. JAVASCRIPT สำหรับทำงานกับระบบ ================= -->
+  <script>
+    const modal = document.getElementById('addModal');
+    const subjectGrid = document.getElementById('subjectGrid');
+
+    function openModal() {
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      document.getElementById('addSubjectForm').reset();
+    }
+
+    // ฟังก์ชันเพิ่มการ์ดวิชาใหม่เข้าสู่หน้าเว็บ
+    function addNewSubject(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('subjectName').value;
+      const emoji = document.getElementById('subjectEmoji').value || '📖';
+      const category = document.getElementById('subjectCategory').value || 'ทั่วไป';
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+
+      // สร้างองค์ประกอบ HTML ของการ์ดวิชาใหม่
+      const newCard = document.createElement('div');
+      newCard.className = 'bg-white p-5 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition flex flex-col justify-between';
+      newCard.innerHTML = `
+        <div>
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-4xl bg-yellow-50 p-3 rounded-2xl">${emoji}</span>
+            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">${category}</span>
+          </div>
+          <h3 class="font-bold text-lg text-gray-800 mb-1">${name}</h3>
+          <p class="text-xs text-gray-400 mb-4">🗓️ เริ่ม ${startDate} - สิ้นสุด ${endDate}</p>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
+            <span>ส่งงานแล้ว</span>
+            <span>0%</span>
+          </div>
+          <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-yellow-400 h-full rounded-full" style="width: 0%"></div>
+          </div>
+        </div>
+      `;
+
+      // แทรกการ์ดใหม่ไปไว้ก่อนหน้าปุ่ม "+ เพิ่มวิชาใหม่"
+      const lastChild = subjectGrid.lastElementChild;
+      subjectGrid.insertBefore(newCard, lastChild);
+
+      closeModal();
+    }
+  </script>
+</body>
+</html>

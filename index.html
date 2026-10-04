@@ -39,9 +39,27 @@
     .fc-daygrid-day:hover {
       background-color: #fff1f2;
     }
+
+    /* Animation สำหรับน้องสัตว์เลี้ยง Little Companion */
+    @keyframes petBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.03); }
+    }
+    @keyframes heartFloat {
+      0% { opacity: 1; transform: translateY(0) scale(0.8); }
+      100% { opacity: 0; transform: translateY(-40px) scale(1.3); }
+    }
+    .animate-pet {
+      animation: petBounce 3s ease-in-out infinite;
+    }
+    .floating-heart {
+      position: absolute;
+      animation: heartFloat 1.2s ease-out forwards;
+      pointer-events: none;
+    }
   </style>
 </head>
-<body class="text-gray-700 min-h-screen flex p-3 sm:p-6 gap-6">
+<body class="text-gray-700 min-h-screen flex p-3 sm:p-6 gap-6 relative">
 
   <!-- ================= 1. เมนูด้านข้างซ้าย (SIDEBAR) 3 หัวข้อ ================= -->
   <aside class="w-64 bg-pink-100/80 backdrop-blur-md rounded-3xl p-5 flex flex-col justify-between shadow-sm border border-pink-200 shrink-0 hidden md:flex">
@@ -63,7 +81,7 @@
           <span>📅</span> 2. ปฏิทินการบ้าน
         </button>
         <button id="navStudy" onclick="switchTab('study')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
-          <span>⏱️</span> 3. จับเวลาอ่านหนังสือ
+          <span>⏱️️</span> 3. จับเวลาอ่านหนังสือ
         </button>
       </nav>
     </div>
@@ -86,7 +104,7 @@
   </div>
 
   <!-- ================= 2. พื้นที่เนื้อหาหลัก (MAIN CONTENT) ================= -->
-  <main class="flex-1 space-y-6 pb-16 md:pb-0">
+  <main class="flex-1 space-y-6 pb-24 md:pb-0">
 
     <!-- TAB 1: หน้าติดตามงาน (TASKS) -->
     <div id="tabTasks" class="space-y-6">
@@ -275,6 +293,28 @@
 
   </main>
 
+  <!-- ================= 3. LITTLE LOVE COMPANION (น้องสัตว์เลี้ยงฮีลใจ) ================= -->
+  <div class="fixed bottom-16 md:bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+    
+    <!-- กล่องข้อความฮีลใจ (Love Bubble) -->
+    <div id="petBubble" class="pointer-events-auto bg-white/95 backdrop-blur-md border border-pink-200 shadow-lg px-4 py-2.5 rounded-2xl rounded-br-none mb-2 max-w-[200px] text-center transition-all duration-300 transform scale-100">
+      <p id="petSpeech" class="text-xs font-medium text-pink-600 leading-relaxed">
+        วันนี้สู้ๆ นะครับ! เค้าเป็นกำลังใจให้ ✨
+      </p>
+    </div>
+
+    <!-- ตัวน้องสัตว์เลี้ยง -->
+    <div id="petContainer" onclick="petAnimal()" class="pointer-events-auto cursor-pointer relative group flex flex-col items-center">
+      <div id="petAvatar" class="text-5xl animate-pet select-none hover:scale-110 transition transform filter drop-shadow-md">
+        🐱
+      </div>
+      <span class="text-[10px] font-bold text-gray-400 bg-white/80 px-2 py-0.5 rounded-full shadow-2xs mt-1 border border-pink-100 group-hover:text-pink-500 transition">
+        กดลูบหัวน้อง 💖
+      </span>
+    </div>
+
+  </div>
+
   <!-- ================= MODAL: เพิ่มวิชาใหม่ ================= -->
   <div id="addSubjectModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
     <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100">
@@ -394,6 +434,59 @@
     let studyHistory = [];
     let totalMinutesStudied = 0;
 
+    // --- Little Love Companion State & Speech Quotes ---
+    const loveQuotes = [
+      "วันนี้สู้ๆ นะครับ! เค้าเป็นกำลังใจให้ ✨",
+      "พักสายตาสักแป๊บ แล้วค่อยลุยต่อนะ ☕",
+      "คุณเก่งมากๆ แล้วนะวันนี้! ❤️",
+      "อย่าลืมดื่มน้ำเยอะๆ นะครับ 🥛",
+      "ค่อยๆ ทำไปทีละงาน เดี๋ยวก็เสร็จแล้ว! 💪",
+      "เค้าคอยเชียร์อยู่ตรงนี้นะ งึดๆ 🐱💕",
+      "คนเก่งอ่านหนังสือเหนื่อยรึยังน้า ~ 🌸"
+    ];
+
+    const petQuotes = [
+      "งับๆ~ ขอบคุณที่ลูบหัวเค้านะ! 💖",
+      "แง้ว! เค้าชอบคุณที่สุดเลย 💕",
+      "ลูบอีกๆ ขอกำลังใจให้เธอเหมือนกันนะ 🐾",
+      "ฟินจังเลย~ ลุยอ่านหนังสือต่อกันนะ ✨"
+    ];
+
+    // สุ่มเปลี่ยนข้อความให้กำลังใจอัตโนมัติ
+    setInterval(() => {
+      if (!timerInterval) { // เปลี่ยนข้อความเมื่อไม่ได้เปิดนาฬิกา
+        const randomQuote = loveQuotes[Math.floor(Math.random() * loveQuotes.length)];
+        updatePetSpeech(randomQuote);
+      }
+    }, 10000);
+
+    function updatePetSpeech(text) {
+      const speech = document.getElementById('petSpeech');
+      const bubble = document.getElementById('petBubble');
+      bubble.classList.add('scale-90', 'opacity-50');
+      setTimeout(() => {
+        speech.textContent = text;
+        bubble.classList.remove('scale-90', 'opacity-50');
+      }, 150);
+    }
+
+    // ฟังก์ชันเมื่อคลิกลูบหัวน้อง
+    function petAnimal() {
+      const randomPetQuote = petQuotes[Math.floor(Math.random() * petQuotes.length)];
+      updatePetSpeech(randomPetQuote);
+
+      // สร้างเอฟเฟกต์หัวใจลอยขึ้นมา
+      const petContainer = document.getElementById('petContainer');
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart text-2xl';
+      heart.textContent = ['💖', '💕', '🌸', '✨', '🐾'][Math.floor(Math.random() * 5)];
+      heart.style.left = `${Math.random() * 40}px`;
+      heart.style.top = '-10px';
+      
+      petContainer.appendChild(heart);
+      setTimeout(() => heart.remove(), 1200);
+    }
+
     // --- Switch Tab System ---
     function switchTab(tab) {
       document.getElementById('tabTasks').classList.add('hidden');
@@ -411,12 +504,15 @@
       if (tab === 'tasks') {
         document.getElementById('tabTasks').classList.remove('hidden');
         renderSubjects();
+        updatePetSpeech("มาตรวจดูงานวิชาต่างๆ กันเถอะครับ ✨");
       } else if (tab === 'calendar') {
         document.getElementById('tabCalendar').classList.remove('hidden');
         renderCalendar();
         renderHomeworks();
+        updatePetSpeech("เช็คการบ้านในปฏิทินกันเถอะ! 📅");
       } else if (tab === 'study') {
         document.getElementById('tabStudy').classList.remove('hidden');
+        updatePetSpeech("พร้อมนั่งอ่านหนังสือไปด้วยกันยังครับ? ⏱️");
       }
     }
 
@@ -571,6 +667,7 @@
     function toggleSubmit(studentId) {
       submissionStatus[currentSubjectId][studentId] = !submissionStatus[currentSubjectId][studentId];
       renderStudentList();
+      petAnimal(); // ร้องขอบคุณเวลาติ๊กงาน
     }
 
     function deleteStudent(studentId) {
@@ -599,6 +696,7 @@
       closeModal('addSubjectModal');
       renderSubjects();
       e.target.reset();
+      updatePetSpeech("เพิ่มวิชาใหม่แล้ว! สู้ๆ นะครับ ✨");
     }
 
     function createStudent(e) {
@@ -703,7 +801,7 @@
               ⏰ ส่งวันที่: ${hw.dueDate}
             </span>
           </div>
-          <button onclick="deleteHomework(${hw.id})" class="text-rose-400 hover:text-rose-600 text-sm">🗑️️ ลบ</button>
+          <button onclick="deleteHomework(${hw.id})" class="text-rose-400 hover:text-rose-600 text-sm">🗑 ลบ</button>
         `;
         container.appendChild(item);
       });
@@ -722,6 +820,7 @@
       renderHomeworks();
       if (calendarObj) renderCalendar();
       e.target.reset();
+      updatePetSpeech("จดการบ้านใหม่แล้ว อย่าลืมทยอยทำน้า~ ✨");
     }
 
     function deleteHomework(id) {
@@ -745,12 +844,14 @@
         label.textContent = "เตรียมพร้อมโฟกัสอ่านหนังสือ";
         const mins = parseInt(document.getElementById('inputStudyMin').value) || 25;
         timeLeft = mins * 60;
+        updatePetSpeech("ตั้งสติ แล้วเริ่มอ่านหนังสือกันเลย! 📖");
       } else {
         breakBtn.className = "px-5 py-2 rounded-2xl font-medium text-sm bg-emerald-400 text-white shadow-sm transition";
         studyBtn.className = "px-5 py-2 rounded-2xl font-medium text-sm bg-gray-100 text-gray-600 hover:bg-gray-200 transition";
         label.textContent = "ได้เวลาพักผ่อนสายตา";
         const mins = parseInt(document.getElementById('inputBreakMin').value) || 5;
         timeLeft = mins * 60;
+        updatePetSpeech("ได้เวลาพักผ่อนแล้ว ยืดเส้นยืดสายหน่อยนะ ☕");
       }
       updateTimerDisplay();
     }
@@ -771,6 +872,7 @@
       if (timerInterval) return;
 
       document.getElementById('btnStartTimer').classList.add('opacity-50', 'pointer-events-none');
+      updatePetSpeech("สู้ๆ น้า! เค้าจะนั่งเฝ้าอยู่ข้างๆ ตรงนี้ 🤫💖");
 
       timerInterval = setInterval(() => {
         if (timeLeft > 0) {
@@ -790,9 +892,11 @@
             studyHistory.unshift({ minutes: studyMins, time: timeStr });
 
             renderStudyHistory();
+            updatePetSpeech("เย้!! อ่านจบแล้ว เก่งที่สุดเลยคนเก่ง 🎉❤️");
             alert('🎉 หมดเวลาอ่านหนังสือแล้วครับ! พักผ่อนสักครู่นะ');
             setTimerMode('break');
           } else {
+            updatePetSpeech("หมดเวลาพักแล้ว ปรบมือต้อนรับความตั้งใจอีกรอบ! ✨");
             alert('⏰ หมดเวลาพักผ่อนแล้วครับ! พร้อมกลับไปอ่านหนังสือหรือยัง?');
             setTimerMode('study');
           }
@@ -805,6 +909,7 @@
         clearInterval(timerInterval);
         timerInterval = null;
         document.getElementById('btnStartTimer').classList.remove('opacity-50', 'pointer-events-none');
+        updatePetSpeech("พักหายใจสักแป๊บ แล้วมาสู้ต่อนะครับ! 💪");
       }
     }
 

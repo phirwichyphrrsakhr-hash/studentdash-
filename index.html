@@ -47,33 +47,33 @@
   <aside class="w-64 bg-pink-100/80 backdrop-blur-md rounded-3xl p-5 flex flex-col justify-between shadow-sm border border-pink-200 shrink-0 hidden md:flex">
     <div>
       <div class="flex items-center gap-3 mb-8 px-2">
-        <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-xl shadow-xs">🎒</div>
+        <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-xl shadow-xs">⚡</div>
         <div>
           <h1 class="font-bold text-gray-800 text-lg leading-tight">Student Dash</h1>
-          <p class="text-xs text-pink-500 font-medium">เพื่อนคู่ใจวัยเรียน ✨</p>
+          <p class="text-xs text-pink-500 font-medium">เพื่อนคู่ใจวัยเรียน ✦</p>
         </div>
       </div>
 
       <!-- เมนูหลัก 4 หัวข้อ -->
       <nav class="space-y-2">
         <button id="navTasks" onclick="switchTab('tasks')" class="w-full flex items-center gap-3 px-4 py-3 bg-white text-pink-600 rounded-2xl font-medium shadow-sm transition text-left">
-          <span>📌</span> 1. งานทั้งหมด (Tasks)
+          <span>🎯</span> 1. งานทั้งหมด (Tasks)
         </button>
         <button id="navCalendar" onclick="switchTab('calendar')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
-          <span>📅</span> 2. ปฏิทินการบ้าน
+          <span>🗓️</span> 2. ปฏิทินการบ้าน
         </button>
         <button id="navStudy" onclick="switchTab('study')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
-          <span>⏱</span> 3. จับเวลาอ่านหนังสือ
+          <span>⏱️</span> 3. จับเวลาอ่านหนังสือ
         </button>
         <button id="navMusic" onclick="switchTab('music')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
-          <span>☕</span> 4. เพลงชิวๆ คาเฟ่
+          <span>🎧</span> 4. เพลงชิวๆ คาเฟ่
         </button>
       </nav>
     </div>
 
     <!-- โปรไฟล์ย่อด้านล่าง -->
     <div class="bg-white/80 p-3 rounded-2xl flex items-center gap-3 border border-pink-100">
-      <div class="w-9 h-9 bg-pink-200 rounded-full flex items-center justify-center text-sm">💖</div>
+      <div class="w-9 h-9 bg-pink-200 rounded-full flex items-center justify-center text-sm">✦</div>
       <div class="overflow-hidden">
         <p id="sideProfileName" class="text-sm font-semibold text-gray-800 truncate">ผู้ใช้งาน</p>
         <p id="sideProfileClass" class="text-xs text-gray-400 truncate">ม.1/7</p>
@@ -83,10 +83,10 @@
 
   <!-- Navigation Bar สำหรับหน้าจอขนาดเล็ก (Mobile Bottom Bar) -->
   <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-pink-100 p-2 flex justify-around md:hidden z-40 text-[10px]">
-    <button onclick="switchTab('tasks')" class="flex flex-col items-center gap-1 p-1 text-pink-500 font-medium"><span>📌</span> งาน</button>
-    <button onclick="switchTab('calendar')" class="flex flex-col items-center gap-1 p-1 text-gray-500"><span>📅</span> ปฏิทิน</button>
+    <button onclick="switchTab('tasks')" class="flex flex-col items-center gap-1 p-1 text-pink-500 font-medium"><span>🎯</span> งาน</button>
+    <button onclick="switchTab('calendar')" class="flex flex-col items-center gap-1 p-1 text-gray-500"><span>🗓️</span> ปฏิทิน</button>
     <button onclick="switchTab('study')" class="flex flex-col items-center gap-1 p-1 text-gray-500"><span>⏱️</span> อ่านหนังสือ</button>
-    <button onclick="switchTab('music')" class="flex flex-col items-center gap-1 p-1 text-gray-500"><span>☕</span> เพลง</button>
+    <button onclick="switchTab('music')" class="flex flex-col items-center gap-1 p-1 text-gray-500"><span>🎧</span> เพลง</button>
   </div>
 
   <!-- ================= 2. พื้นที่เนื้อหาหลัก (MAIN CONTENT) ================= -->
@@ -99,7 +99,7 @@
       <div id="subjectGridView" class="space-y-6">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-3xl shadow-xs border border-gray-100">
           <div>
-            <h2 class="text-2xl font-bold text-gray-800">วิชาทั้งหมด 📖</h2>
+            <h2 class="text-2xl font-bold text-gray-800">วิชาทั้งหมด 🪐</h2>
             <p class="text-sm text-gray-400">คลิกที่การ์ดวิชาเพื่อเข้าไปติ๊กเช็คชื่อส่งงานเพื่อนได้เลย!</p>
           </div>
           <button onclick="openModal('addSubjectModal')" class="flex items-center gap-2 bg-pink-400 hover:bg-pink-500 text-white px-5 py-2.5 rounded-2xl font-medium shadow-md shadow-pink-200 transition transform active:scale-95">
@@ -121,10 +121,10 @@
             </button>
             <div>
               <div class="flex items-center gap-2">
-                <span id="detailEmoji" class="text-2xl">🧪</span>
+                <span id="detailEmoji" class="text-2xl">⚡</span>
                 <h2 id="detailTitle" class="text-2xl font-bold text-gray-800">วิชาเคมี</h2>
               </div>
-              <p id="detailDates" class="text-xs text-gray-400 mt-0.5">🗓️ กำหนดส่ง: -</p>
+              <p id="detailDates" class="text-xs text-gray-400 mt-0.5">🗓️️ กำหนดส่ง: -</p>
             </div>
           </div>
 
@@ -155,7 +155,7 @@
 
         <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs">
           <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <span>📋</span> รายชื่อส่งงาน
+            <span>📑</span> รายชื่อส่งงาน
           </h3>
           <div id="studentList" class="space-y-3 max-h-[450px] overflow-y-auto pr-1 custom-scrollbar">
             <!-- รายชื่อเพื่อนจะแสดงตรงนี้ -->
@@ -169,7 +169,7 @@
     <div id="tabCalendar" class="hidden space-y-6">
       <div class="bg-white p-5 rounded-3xl shadow-xs border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 class="text-2xl font-bold text-gray-800">ปฏิทินบันทึกการบ้าน 📅</h2>
+          <h2 class="text-2xl font-bold text-gray-800">ปฏิทินบันทึกการบ้าน 🗓️</h2>
           <p class="text-sm text-gray-400">ดูปฏิทินรายเดือน และคลิกเลือกวันเพื่อจดโน้ตงานได้ทันที</p>
         </div>
         <button onclick="openModal('addHwModal')" class="bg-pink-400 hover:bg-pink-500 text-white px-5 py-2.5 rounded-2xl font-medium shadow-md shadow-pink-200 transition">
@@ -243,7 +243,7 @@
         <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs flex flex-col justify-between space-y-6">
           <div>
             <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
-              <span>📊</span> สถิติการอ่านหนังสือ
+              <span>📈</span> สถิติการอ่านหนังสือ
             </h3>
 
             <div class="bg-gradient-to-br from-pink-400 to-purple-400 text-white p-5 rounded-2xl shadow-md mb-4 text-center">
@@ -258,7 +258,7 @@
           </div>
 
           <button onclick="clearStudyHistory()" class="w-full py-2 bg-rose-50 hover:bg-rose-100 text-rose-500 rounded-xl text-xs font-medium transition">
-            🗑️ ล้างประวัติสถิติ
+            ✕ ล้างประวัติสถิติ
           </button>
         </div>
       </div>
@@ -267,14 +267,14 @@
     <!-- TAB 4: เพลงชิวๆ คาเฟ่ (MUSIC PLAYER) -->
     <div id="tabMusic" class="hidden space-y-6">
       <div class="bg-white p-5 rounded-3xl shadow-xs border border-gray-100">
-        <h2 class="text-2xl font-bold text-gray-800">มุมเพลงชิวๆ คาเฟ่ ☕🎵</h2>
+        <h2 class="text-2xl font-bold text-gray-800">มุมเพลงชิวๆ คาเฟ่ 🎧✨</h2>
         <p class="text-sm text-gray-400">เปิดฟังเพลงบรรยากาศคาเฟ่นุ่มๆ เพิ่มสมาธิในการอ่านหนังสือและการทำงาน</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="md:col-span-2 bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-xs flex flex-col items-center justify-center text-center space-y-6">
           <div class="w-32 h-32 bg-pink-100 rounded-3xl flex items-center justify-center text-6xl shadow-inner border border-pink-200 animate-pulse">
-            ☕
+            🎧
           </div>
           <div>
             <h3 id="currentTrackTitle" class="text-xl font-bold text-gray-800">Cafe Jazz & Chill Lofi</h3>
@@ -302,7 +302,7 @@
             </button>
 
             <button onclick="playTrack('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3', 'Rainy Day Cafe Piano', 'เสียงเปียโนเคล้าเสียงฝนตกเบาๆ')" class="w-full text-left p-3 rounded-2xl hover:bg-gray-50 transition border border-gray-100 flex items-center gap-3">
-              <span class="text-xl">🌧️</span>
+              <span class="text-xl">🎹</span>
               <div>
                 <p class="text-xs font-bold text-gray-800">Rainy Day Cafe Piano</p>
                 <p class="text-[10px] text-gray-400">เปียโนคาเฟ่วันฝนตก</p>
@@ -328,7 +328,7 @@
   <div id="addSubjectModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
     <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-gray-800">✨ เพิ่มรายวิชาใหม่</h3>
+        <h3 class="text-lg font-bold text-gray-800">✦ เพิ่มรายวิชาใหม่</h3>
         <button onclick="closeModal('addSubjectModal')" class="text-gray-400 text-xl font-bold">&times;</button>
       </div>
       <form onsubmit="createSubject(event)" class="space-y-4">
@@ -339,7 +339,7 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-medium text-gray-600 mb-1">อิโมจิประจำวิชา</label>
-            <input type="text" id="subEmoji" required placeholder="🧪, 📚, 📐" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-pink-300">
+            <input type="text" id="subEmoji" required placeholder="⚡, 🎯, 🧪" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-pink-300">
           </div>
           <div>
             <label class="block text-xs font-medium text-gray-600 mb-1">หมวดหมู่</label>
@@ -426,7 +426,7 @@
   <script>
     // --- Data State ---
     let subjects = [
-      { id: 1, name: 'เคมี (Chemistry)', emoji: '🧪', category: 'วิทยาศาสตร์', start: '2026-10-01', end: '2026-10-10', alertTime: '' }
+      { id: 1, name: 'เคมี (Chemistry)', emoji: '⚡', category: 'วิทยาศาสตร์', start: '2026-10-01', end: '2026-10-10', alertTime: '' }
     ];
 
     let students = [];
@@ -503,7 +503,7 @@
               <span class="px-3 py-1 bg-pink-100 text-pink-600 rounded-full text-xs font-medium">${sub.category}</span>
             </div>
             <h3 class="font-bold text-lg text-gray-800 mb-1 group-hover:text-pink-500 transition">${sub.name}</h3>
-            <p class="text-xs text-gray-400 mb-2">🗓 กำหนดส่ง: ${sub.end}</p>
+            <p class="text-xs text-gray-400 mb-2">🗓️ กำหนดส่ง: ${sub.end}</p>
             ${sub.alertTime ? `<p class="text-[11px] text-pink-500 font-medium">🔔 แจ้งเตือน: ${sub.alertTime.replace('T', ' ')}</p>` : ''}
           </div>
           <div class="mt-4">
@@ -536,7 +536,7 @@
 
       document.getElementById('detailEmoji').textContent = sub.emoji;
       document.getElementById('detailTitle').textContent = sub.name;
-      document.getElementById('detailDates').textContent = `🗓 สิ้นสุดกำหนดส่ง: ${sub.end}`;
+      document.getElementById('detailDates').textContent = `🗓️ สิ้นสุดกำหนดส่ง: ${sub.end}`;
 
       document.getElementById('subjectGridView').classList.add('hidden');
       document.getElementById('subjectDetailView').classList.remove('hidden');
@@ -598,7 +598,7 @@
                 ${isSubmitted ? '✓ ส่งแล้ว' : '✕ ยังไม่ส่ง'}
               </button>
               <button onclick="deleteStudent(${std.id})" class="w-8 h-8 bg-rose-50 hover:bg-rose-100 text-rose-400 hover:text-rose-600 rounded-xl flex items-center justify-center transition text-sm">
-                🗑️
+                ✕
               </button>
             </div>
           `;
@@ -745,7 +745,7 @@
               ⏰ ส่งวันที่: ${hw.dueDate}
             </span>
           </div>
-          <button onclick="deleteHomework(${hw.id})" class="text-rose-400 hover:text-rose-600 text-sm">🗑 ลบ</button>
+          <button onclick="deleteHomework(${hw.id})" class="text-rose-400 hover:text-rose-600 text-sm">✕ ลบ</button>
         `;
         container.appendChild(item);
       });

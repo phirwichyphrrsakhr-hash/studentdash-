@@ -1,933 +1,186 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student Dash - ระบบติดตามการเรียนและอ่านหนังสือ</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- FullCalendar CDN สำหรับปฏิทินรายเดือน -->
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-  <style>
-    body {
-      font-family: 'Mitr', sans-serif;
-      background-color: #FAF8F5;
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #FBCFE8;
-      border-radius: 10px;
-    }
-    /* สไตล์ตกแต่ง FullCalendar */
-    .fc {
-      --fc-border-color: #f3e8ff;
-      --fc-button-bg-color: #f472b6;
-      --fc-button-border-color: #f472b6;
-      --fc-button-hover-bg-color: #ec4899;
-      --fc-button-active-bg-color: #db2777;
-    }
-    .fc-toolbar-title {
-      font-size: 1.25rem !important;
-      font-weight: 600;
-      color: #374151;
-    }
-    .fc-daygrid-day {
-      cursor: pointer;
-    }
-    .fc-daygrid-day:hover {
-      background-color: #fff1f2;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Tasks & Calendar</title>
+    <!-- CSS / Typography -->
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #6366f1;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Navigation Bar - ตัด Account ออกแล้ว */
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            background: var(--card-bg);
+            padding: 8px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        /* Content Sections */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Modern Add Button */
+        .btn-add {
+            background: #ffffff10;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-add:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Empty State (วิชาเคมีโดนลบออก เป็น 0) */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+    </style>
 </head>
-<body class="text-gray-700 min-h-screen flex p-3 sm:p-6 gap-6">
+<body>
 
-  <!-- ================= 1. เมนูด้านข้างซ้าย (SIDEBAR) 4 หัวข้อ ================= -->
-  <aside class="w-64 bg-pink-100/80 backdrop-blur-md rounded-3xl p-5 flex flex-col justify-between shadow-sm border border-pink-200 shrink-0 hidden md:flex">
-    <div>
-      <div class="flex items-center gap-3 mb-8 px-2">
-        <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-xl shadow-xs">🎒</div>
-        <div>
-          <h1 class="font-bold text-gray-800 text-lg leading-tight">Student Dash</h1>
-          <p class="text-xs text-pink-500 font-medium">เพื่อนคู่ใจวัยเรียน ✨</p>
-        </div>
-      </div>
+    <div class="container">
+        <!-- Navigation Menu (มี 3 หัวข้อหลัก ตามสั่ง 100%) -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active">⚡️ งาน</button>
+            <button class="tab-btn">🗓️ ปฏิทิน</button>
+            <button class="tab-btn">📖 อ่านหนังสือ</button>
+        </nav>
 
-      <!-- เมนู 4 หัวข้อหลัก -->
-      <nav class="space-y-2">
-        <button id="navTasks" onclick="switchTab('tasks')" class="w-full flex items-center gap-3 px-4 py-3 bg-white text-pink-600 rounded-2xl font-medium shadow-sm transition text-left">
-          <span>📌</span> 1. งานทั้งหมด (Tasks)
-        </button>
-        <button id="navCalendar" onclick="switchTab('calendar')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
-          <span>📅</span> 2. ปฏิทินการบ้าน
-        </button>
-        <button id="navStudy" onclick="switchTab('study')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
-          <span>⏱️</span> 3. จับเวลาอ่านหนังสือ
-        </button>
-        <button id="navAccount" onclick="switchTab('account')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left">
-          <span>👤</span> 4. บัญชีผู้ใช้ (Account)
-        </button>
-      </nav>
-    </div>
-
-    <!-- โปรไฟล์ย่อด้านล่าง -->
-    <div class="bg-white/80 p-3 rounded-2xl flex items-center gap-3 border border-pink-100 cursor-pointer" onclick="switchTab('account')">
-      <div class="w-9 h-9 bg-pink-200 rounded-full flex items-center justify-center text-sm">💖</div>
-      <div class="overflow-hidden">
-        <p id="sideProfileName" class="text-sm font-semibold text-gray-800 truncate">ผู้ใช้งาน</p>
-        <p id="sideProfileClass" class="text-xs text-gray-400 truncate">ม.1/7</p>
-      </div>
-    </div>
-  </aside>
-
-  <!-- Navigation Bar สำหรับหน้าจอขนาดเล็ก (Mobile Bottom Bar) -->
-  <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-pink-100 p-2 flex justify-around md:hidden z-40">
-    <button onclick="switchTab('tasks')" class="text-xs flex flex-col items-center gap-1 p-1 text-pink-500 font-medium"><span>📌</span> งาน</button>
-    <button onclick="switchTab('calendar')" class="text-xs flex flex-col items-center gap-1 p-1 text-gray-500"><span>📅</span> ปฏิทิน</button>
-    <button onclick="switchTab('study')" class="text-xs flex flex-col items-center gap-1 p-1 text-gray-500"><span>⏱️</span> อ่านหนังสือ</button>
-    <button onclick="switchTab('account')" class="text-xs flex flex-col items-center gap-1 p-1 text-gray-500"><span>👤</span> บัญชี</button>
-  </div>
-
-  <!-- ================= 2. พื้นที่เนื้อหาหลัก (MAIN CONTENT) ================= -->
-  <main class="flex-1 space-y-6 pb-16 md:pb-0">
-
-    <!-- TAB 1: หน้าติดตามงาน (TASKS) -->
-    <div id="tabTasks" class="space-y-6">
-      
-      <!-- VIEW 1.1: หน้ารวมการ์ดวิชา -->
-      <div id="subjectGridView" class="space-y-6">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-3xl shadow-xs border border-gray-100">
-          <div>
-            <h2 class="text-2xl font-bold text-gray-800">วิชาทั้งหมด 📖</h2>
-            <p class="text-sm text-gray-400">คลิกที่การ์ดวิชาเพื่อเข้าไปติ๊กเช็คชื่อส่งงานเพื่อนได้เลย!</p>
-          </div>
-          <button onclick="openModal('addSubjectModal')" class="flex items-center gap-2 bg-pink-400 hover:bg-pink-500 text-white px-5 py-2.5 rounded-2xl font-medium shadow-md shadow-pink-200 transition transform active:scale-95">
-            <span class="text-lg">+</span> เพิ่มวิชาใหม่
-          </button>
-        </div>
-
-        <div id="subjectGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          <!-- เรนเดอร์การ์ดวิชาผ่าน JS -->
-        </div>
-      </div>
-
-      <!-- VIEW 1.2: หน้าเช็คชื่อส่งงานเพื่อน -->
-      <div id="subjectDetailView" class="hidden space-y-6">
-        <div class="bg-white p-5 rounded-3xl shadow-xs border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div class="flex items-center gap-4">
-            <button onclick="hideSubjectDetail()" class="w-10 h-10 bg-pink-50 hover:bg-pink-100 text-pink-500 rounded-2xl flex items-center justify-center transition font-bold text-lg">
-              ←
-            </button>
-            <div>
-              <div class="flex items-center gap-2">
-                <span id="detailEmoji" class="text-2xl">🧪</span>
-                <h2 id="detailTitle" class="text-2xl font-bold text-gray-800">วิชาเคมี</h2>
-              </div>
-              <p id="detailDates" class="text-xs text-gray-400 mt-0.5">🗓️ กำหนดส่ง: -</p>
-            </div>
-          </div>
-
-          <div class="flex gap-2 w-full sm:w-auto">
-            <button onclick="openModal('addStudentModal')" class="flex-1 sm:flex-none bg-purple-100 hover:bg-purple-200 text-purple-600 px-4 py-2.5 rounded-2xl text-sm font-medium transition">
-              + เพิ่มเพื่อนในห้อง
-            </button>
-            <button onclick="copyUnsentList()" class="flex-1 sm:flex-none bg-green-400 hover:bg-green-500 text-white px-4 py-2.5 rounded-2xl text-sm font-medium shadow-md shadow-green-100 transition flex items-center justify-center gap-1">
-              💬 ก๊อปปี้ทวงงาน LINE
-            </button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-4">
-          <div class="bg-white p-4 rounded-3xl border border-gray-100 text-center shadow-xs">
-            <p class="text-xs text-gray-400 mb-1">นักเรียนทั้งหมด</p>
-            <p id="totalCount" class="text-2xl font-bold text-gray-700">0</p>
-          </div>
-          <div class="bg-emerald-50 p-4 rounded-3xl border border-emerald-100 text-center shadow-xs">
-            <p class="text-xs text-emerald-600 mb-1">ส่งแล้ว 🟢</p>
-            <p id="submittedCount" class="text-2xl font-bold text-emerald-600">0</p>
-          </div>
-          <div class="bg-rose-50 p-4 rounded-3xl border border-rose-100 text-center shadow-xs">
-            <p class="text-xs text-rose-500 mb-1">ยังไม่ส่ง 🔴</p>
-            <p id="pendingCount" class="text-2xl font-bold text-rose-500">0</p>
-          </div>
-        </div>
-
-        <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-xs">
-          <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <span>📋</span> รายชื่อส่งงาน
-          </h3>
-          <div id="studentList" class="space-y-3 max-h-[450px] overflow-y-auto pr-1 custom-scrollbar">
-            <!-- รายชื่อเพื่อนจะแสดงตรงนี้ -->
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- TAB 2: ปฏิทินรายเดือน & โน้ตการบ้าน (CALENDAR) -->
-    <div id="tabCalendar" class="hidden space-y-6">
-      <div class="bg-white p-5 rounded-3xl shadow-xs border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 class="text-2xl font-bold text-gray-800">ปฏิทินบันทึกการบ้าน 📅</h2>
-          <p class="text-sm text-gray-400">ดูปฏิทินรายเดือน และคลิกเลือกวันเพื่อจดโน้ตงานได้ทันที</p>
-        </div>
-        <button onclick="openModal('addHwModal')" class="bg-pink-400 hover:bg-pink-500 text-white px-5 py-2.5 rounded-2xl font-medium shadow-md shadow-pink-200 transition">
-          + จดการบ้านใหม่
-        </button>
-      </div>
-
-      <!-- ส่วนแสดงปฏิทินเต็มเดือน -->
-      <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs">
-        <div id="calendarContainer"></div>
-      </div>
-
-      <!-- รายการการบ้านทั้งหมด -->
-      <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs space-y-4">
-        <h3 class="font-bold text-gray-800 text-lg mb-2 flex items-center gap-2">
-          <span>📌</span> รายการการบ้าน / สิ่งที่ต้องทำทั้งหมด
-        </h3>
-        <div id="hwList" class="space-y-3">
-          <!-- รายการการบ้านจะเรนเดอร์ตรงนี้ -->
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 3: จับเวลาอ่านหนังสือ & เก็บสถิติ (STUDY TIMER) -->
-    <div id="tabStudy" class="hidden space-y-6">
-      <div class="bg-white p-5 rounded-3xl shadow-xs border border-gray-100">
-        <h2 class="text-2xl font-bold text-gray-800">จับเวลาอ่านหนังสือ ⏱️</h2>
-        <p class="text-sm text-gray-400">ตั้งเวลาโฟกัสอ่านหนังสือ พักผ่อนสายตา และเก็บบันทึกสถิติความขยัน!</p>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- กล่องตั้งเวลา & นาฬิกานับถอยหลัง -->
-        <div class="lg:col-span-2 bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-xs flex flex-col items-center justify-center text-center space-y-6">
-          
-          <div class="flex gap-3">
-            <button id="modeStudyBtn" onclick="setTimerMode('study')" class="px-5 py-2 rounded-2xl font-medium text-sm bg-pink-400 text-white shadow-sm transition">
-              📖 โหมดอ่านหนังสือ
-            </button>
-            <button id="modeBreakBtn" onclick="setTimerMode('break')" class="px-5 py-2 rounded-2xl font-medium text-sm bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
-              ☕ โหมดพักผ่อน
-            </button>
-          </div>
-
-          <!-- ตัวเลขเวลาแสดงผลใหญ่ -->
-          <div class="relative w-64 h-64 bg-pink-50 rounded-full border-8 border-pink-200 flex flex-col items-center justify-center shadow-inner">
-            <span id="timerDisplay" class="text-5xl font-extrabold text-pink-500 tracking-wider">25:00</span>
-            <span id="timerStatusLabel" class="text-xs font-semibold text-pink-400 mt-2">เตรียมพร้อมโฟกัส</span>
-          </div>
-
-          <!-- ปรับแต่งตั้งเวลา -->
-          <div class="flex items-center gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-100">
-            <div>
-              <label class="text-[11px] font-medium text-gray-500 block">เวลาอ่าน (นาที)</label>
-              <input type="number" id="inputStudyMin" value="25" min="1" max="180" class="w-16 text-center border border-gray-200 rounded-xl py-1 text-sm bg-white font-bold text-gray-700">
-            </div>
-            <div class="text-gray-300">|</div>
-            <div>
-              <label class="text-[11px] font-medium text-gray-500 block">เวลาพัก (นาที)</label>
-              <input type="number" id="inputBreakMin" value="5" min="1" max="60" class="w-16 text-center border border-gray-200 rounded-xl py-1 text-sm bg-white font-bold text-gray-700">
-            </div>
-            <button onclick="applyTimerSettings()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs px-3 py-2 rounded-xl transition font-medium">
-              ปรับเวลา
-            </button>
-          </div>
-
-          <!-- ปุ่มควบคุม -->
-          <div class="flex gap-4">
-            <button id="btnStartTimer" onclick="startTimer()" class="bg-pink-400 hover:bg-pink-500 text-white px-8 py-3 rounded-2xl font-semibold shadow-md shadow-pink-200 transition transform active:scale-95 text-lg">
-              ▶️ เริ่มจับเวลา
-            </button>
-            <button onclick="pauseTimer()" class="bg-amber-100 hover:bg-amber-200 text-amber-700 px-6 py-3 rounded-2xl font-semibold transition text-lg">
-              ⏸️ พัก
-            </button>
-            <button onclick="resetTimer()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-6 py-3 rounded-2xl font-semibold transition text-lg">
-              🔄 รีเซ็ต
-            </button>
-          </div>
-
-        </div>
-
-        <!-- กล่องเก็บสถิติการอ่าน -->
-        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs flex flex-col justify-between space-y-6">
-          <div>
-            <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
-              <span>📊</span> สถิติการอ่านหนังสือ
-            </h3>
-
-            <!-- สรุปรวมเวลา -->
-            <div class="bg-gradient-to-br from-pink-400 to-purple-400 text-white p-5 rounded-2xl shadow-md mb-4 text-center">
-              <p class="text-xs font-medium opacity-90">อ่านสะสมรวมทั้งหมด</p>
-              <p id="totalStudyTime" class="text-3xl font-extrabold mt-1">0 นาที</p>
+        <!-- Section 1: งาน (Tasks & Subjects) -->
+        <section class="card">
+            <div class="header">
+                <h2>⚡️ รายการงานและวิชาเรียน</h2>
+                <button class="btn-add" onclick="addTask()">✦ เพิ่มวิชา/งานใหม่</button>
             </div>
 
-            <!-- ประวัติการอ่าน -->
-            <h4 class="text-xs font-semibold text-gray-500 mb-2">ประวัติโฟกัสล่าสุด</h4>
-            <div id="studyHistoryList" class="space-y-2 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
-              <p class="text-xs text-gray-400 text-center py-4">ยังไม่มีประวัติการอ่านหนังสือ</p>
+            <!-- เริ่มต้นด้วยรายการเป็น 0 (เอาวิชาเคมีออกแล้ว) -->
+            <div id="task-list" class="empty-state">
+                <div class="empty-icon">📭</div>
+                <p>ยังไม่มีรายการงานหรือวิชาเรียน<br>กด "เพิ่มวิชา/งานใหม่" เพื่อเริ่มต้นได้เลย</p>
             </div>
-          </div>
+        </section>
 
-          <button onclick="clearStudyHistory()" class="w-full py-2 bg-rose-50 hover:bg-rose-100 text-rose-500 rounded-xl text-xs font-medium transition">
-            🗑️ ล้างประวัติสถิติ
-          </button>
-        </div>
-      </div>
+        <!-- Section 2: ปฏิทิน (Calendar) -->
+        <section class="card">
+            <div class="header">
+                <h2>🗓️ ปฏิทินกิจกรรม</h2>
+            </div>
+            <div class="empty-state">
+                <div class="empty-icon">📍</div>
+                <p>ตารางปฏิทินพร้อมสำหรับการวางแผน</p>
+            </div>
+        </section>
+
+        <!-- Section 3: อ่านหนังสือ (Reading & Focus) -->
+        <section class="card">
+            <div class="header">
+                <h2>📖 บันทึกการอ่านหนังสือ</h2>
+            </div>
+            <div class="empty-state">
+                <div class="empty-icon">☕️</div>
+                <p>เริ่มตั้งเวลาการอ่านหนังสือ หรือบันทึกความก้าวหน้า</p>
+            </div>
+        </section>
     </div>
 
-    <!-- TAB 4: บัญชีผู้ใช้ & ตั้งค่าการแจ้งเตือน (ACCOUNT) -->
-    <div id="tabAccount" class="hidden space-y-6">
-      <div class="bg-white p-5 rounded-3xl shadow-xs border border-gray-100">
-        <h2 class="text-2xl font-bold text-gray-800">ตั้งค่าบัญชีผู้ใช้ & การแจ้งเตือน 👤</h2>
-        <p class="text-sm text-gray-400">จัดการข้อมูลส่วนตัวและเปิดสิทธิ์การแจ้งเตือนเข้ามือถือ</p>
-      </div>
-
-      <!-- ปุ่มขออนุญาตการแจ้งเตือน -->
-      <div class="bg-gradient-to-r from-pink-50 to-purple-50 p-6 rounded-3xl border border-pink-100 shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">🔔 การแจ้งเตือนโทรศัพท์</h3>
-          <p class="text-xs text-gray-500 mt-1">กดปุ่มเปิดการแจ้งเตือนเพื่อให้ระบบสามารถส่งข้อความเตือนเข้ามือถือได้ตามเวลาที่ตั้งไว้</p>
-        </div>
-        <button onclick="requestNotificationPermission()" class="bg-pink-500 hover:bg-pink-600 text-white px-5 py-2.5 rounded-2xl font-medium shadow-md shadow-pink-200 transition shrink-0">
-          🔔 เปิดการแจ้งเตือน
-        </button>
-      </div>
-
-      <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-xs max-w-lg space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-gray-600 mb-1">ชื่อ - นามสกุล / ชื่อเล่น</label>
-          <input type="text" id="accName" value="ผู้ใช้งาน" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-gray-600 mb-1">ระดับชั้น / ห้อง</label>
-          <input type="text" id="accClass" value="ม.1/7" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-gray-600 mb-1">ตำแหน่ง / บทบาท</label>
-          <input type="text" id="accRole" value="หัวหน้าห้อง" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
-        </div>
-        <button onclick="saveProfile()" class="w-full py-3 bg-pink-400 hover:bg-pink-500 text-white font-medium rounded-xl shadow-md shadow-pink-100 transition">
-          💾 บันทึกข้อมูลส่วนตัว
-        </button>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- ================= MODAL: เพิ่มวิชาใหม่ ================= -->
-  <div id="addSubjectModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
-    <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-gray-800">✨ เพิ่มรายวิชาใหม่</h3>
-        <button onclick="closeModal('addSubjectModal')" class="text-gray-400 text-xl font-bold">&times;</button>
-      </div>
-      <form onsubmit="createSubject(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-gray-600 mb-1">ชื่อวิชา</label>
-          <input type="text" id="subName" required placeholder="เช่น เคมี, ภาษาไทย" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1">อิโมจิประจำวิชา</label>
-            <input type="text" id="subEmoji" required placeholder="🧪, 📚, 📐" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-pink-300">
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1">หมวดหมู่</label>
-            <input type="text" id="subCategory" placeholder="วิทย์, ศิลป์" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1">วันเริ่มงาน</label>
-            <input type="date" id="subStart" required class="w-full border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-pink-300">
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1">วันกำหนดส่ง</label>
-            <input type="date" id="subEnd" required class="w-full border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-pink-300">
-          </div>
-        </div>
-
-        <div class="p-3 bg-pink-50 rounded-2xl border border-pink-100">
-          <label class="block text-xs font-bold text-pink-600 mb-1">⏰ ตั้งเวลาแจ้งเตือนล่วงหน้า</label>
-          <input type="datetime-local" id="subAlertTime" class="w-full border border-pink-200 rounded-xl px-3 py-2 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-300 bg-white">
-          <p class="text-[10px] text-pink-400 mt-1">* เบราว์เซอร์จะเด้งเตือนเมื่อถึงวันและเวลาที่กำหนด</p>
-        </div>
-
-        <button type="submit" class="w-full py-2.5 bg-pink-400 hover:bg-pink-500 text-white rounded-xl text-sm font-medium shadow-md shadow-pink-100 transition mt-2">
-          บันทึกรายวิชา
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: เพิ่มนักเรียน ================= -->
-  <div id="addStudentModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
-    <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-gray-800">👤 เพิ่มเพื่อนในห้อง</h3>
-        <button onclick="closeModal('addStudentModal')" class="text-gray-400 text-xl font-bold">&times;</button>
-      </div>
-      <form onsubmit="createStudent(event)" class="space-y-4">
-        <div class="grid grid-cols-3 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1">เลขที่</label>
-            <input type="number" id="stdNo" required placeholder="1" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-300">
-          </div>
-          <div class="col-span-2">
-            <label class="block text-xs font-medium text-gray-600 mb-1">ชื่อ-นามสกุล / ชื่อเล่น</label>
-            <input type="text" id="stdName" required placeholder="นายสมชาย ใจดี" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-300">
-          </div>
-        </div>
-        <button type="submit" class="w-full py-2.5 bg-purple-400 hover:bg-purple-500 text-white rounded-xl text-sm font-medium shadow-md shadow-purple-100 transition mt-2">
-          + เพิ่มชื่อเพื่อน
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: จดการบ้านใหม่ ================= -->
-  <div id="addHwModal" class="fixed inset-0 bg-black/30 backdrop-blur-xs flex items-center justify-center hidden z-50 p-4">
-    <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-pink-100">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-gray-800">📝 จดบันทึกการบ้าน</h3>
-        <button onclick="closeModal('addHwModal')" class="text-gray-400 text-xl font-bold">&times;</button>
-      </div>
-      <form onsubmit="createHomework(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-medium text-gray-600 mb-1">ชื่อวิชา / หัวข้องาน</label>
-          <input type="text" id="hwTitle" required placeholder="เช่น แบบฝึกหัดคณิตศาสตร์ หน้า 24" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-gray-600 mb-1">วันกำหนดส่ง</label>
-          <input type="date" id="hwDueDate" required class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-gray-600 mb-1">รายละเอียดเพิ่มเติม</label>
-          <textarea id="hwDetail" rows="2" placeholder="รายละเอียดงาน หรือสรุปสั้นๆ..." class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"></textarea>
-        </div>
-        <button type="submit" class="w-full py-2.5 bg-pink-400 hover:bg-pink-500 text-white rounded-xl text-sm font-medium shadow-md shadow-pink-100 transition mt-2">
-          บันทึกการบ้าน
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= JAVASCRIPT ================= -->
-  <script>
-    // --- Data State ---
-    let subjects = [
-      { id: 1, name: 'เคมี (Chemistry)', emoji: '🧪', category: 'วิทยาศาสตร์', start: '2026-10-01', end: '2026-10-10', alertTime: '' }
-    ];
-
-    let students = [];
-    let homeworks = [];
-    let submissionStatus = {};
-    let currentSubjectId = null;
-
-    let userProfile = {
-      name: 'ผู้ใช้งาน',
-      class: 'ม.1/7',
-      role: 'หัวหน้าห้อง'
-    };
-
-    let calendarObj = null;
-
-    // --- Study Timer State ---
-    let timerMode = 'study'; // 'study' หรือ 'break'
-    let timerInterval = null;
-    let timeLeft = 25 * 60; // วินาที
-    let studyHistory = [];
-    let totalMinutesStudied = 0;
-
-    // --- Switch Tab System ---
-    function switchTab(tab) {
-      document.getElementById('tabTasks').classList.add('hidden');
-      document.getElementById('tabCalendar').classList.add('hidden');
-      document.getElementById('tabStudy').classList.add('hidden');
-      document.getElementById('tabAccount').classList.add('hidden');
-
-      ['Tasks', 'Calendar', 'Study', 'Account'].forEach(t => {
-        const btn = document.getElementById('nav' + t);
-        if (btn) btn.className = "w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-white/60 rounded-2xl font-medium transition text-left";
-      });
-
-      const activeBtn = document.getElementById('nav' + tab.charAt(0).toUpperCase() + tab.slice(1));
-      if (activeBtn) activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 bg-white text-pink-600 rounded-2xl font-medium shadow-sm transition text-left";
-
-      if (tab === 'tasks') {
-        document.getElementById('tabTasks').classList.remove('hidden');
-        renderSubjects();
-      } else if (tab === 'calendar') {
-        document.getElementById('tabCalendar').classList.remove('hidden');
-        renderCalendar();
-        renderHomeworks();
-      } else if (tab === 'study') {
-        document.getElementById('tabStudy').classList.remove('hidden');
-      } else if (tab === 'account') {
-        document.getElementById('tabAccount').classList.remove('hidden');
-      }
-    }
-
-    // --- Notification Request ---
-    function requestNotificationPermission() {
-      if (!("Notification" in window)) {
-        alert("เบราว์เซอร์นี้ไม่รองรับการแจ้งเตือนครับ");
-        return;
-      }
-      Notification.requestPermission().then(permission => {
-        if (permission === "granted") {
-          alert("🎉 เปิดการแจ้งเตือนเรียบร้อยแล้ว! ระบบจะเด้งเตือนเมื่อถึงเวลาครับ");
-          new Notification("Student Dash ✨", { body: "เปิดระบบการแจ้งเตือนการบ้านเรียบร้อยแล้ว!" });
-        } else {
-          alert("⚠️ คุณปฏิเสธสิทธิ์การแจ้งเตือน โปรดอนุญาตในการตั้งค่าของเบราว์เซอร์");
+    <script>
+        // ฟังก์ชันสำหรับเพิ่มงาน/วิชา โดยผู้ใช้เอง
+        function addTask() {
+            const taskName = prompt("กรอกชื่อวิชาหรือหัวข้อสารงานที่คุณต้องการเพิ่ม:");
+            if (taskName) {
+                const list = document.getElementById("task-list");
+                if (list.classList.contains("empty-state")) {
+                    list.className = "";
+                    list.innerHTML = "";
+                }
+                const item = document.createElement("div");
+                item.style.cssText = "padding: 12px; background: #0f172a50; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;";
+                item.innerHTML = `<span>🔹 ${taskName}</span> <span style="font-size: 12px; color: var(--text-muted);">รอดำเนินการ</span>`;
+                list.appendChild(item);
+            }
         }
-      });
-    }
-
-    setInterval(() => {
-      const now = new Date();
-      const currentIsoStr = now.toISOString().slice(0, 16);
-
-      subjects.forEach(sub => {
-        if (sub.alertTime && sub.alertTime === currentIsoStr && !sub.alerted) {
-          sub.alerted = true;
-          if (Notification.permission === "granted") {
-            new Notification(`🚨 แจ้งเตือนส่งงาน: วิชา ${sub.name} ${sub.emoji}`, {
-              body: `วันนี้ถึงกำหนดส่งงานวิชา ${sub.name} แล้วอย่าลืมทวงงานเพื่อนๆ นะครับ!`,
-              icon: '🎒'
-            });
-          } else {
-            alert(`🚨 แจ้งเตือนส่งงาน: วิชา ${sub.name} ถึงกำหนดแล้วครับ!`);
-          }
-        }
-      });
-    }, 10000);
-
-    // --- TAB 1: Tasks Functions ---
-    function renderSubjects() {
-      const grid = document.getElementById('subjectGrid');
-      grid.innerHTML = '';
-
-      subjects.forEach(sub => {
-        const subStatus = submissionStatus[sub.id] || {};
-        const total = students.length;
-        const submitted = Object.values(subStatus).filter(Boolean).length;
-        const percent = total > 0 ? Math.round((submitted / total) * 100) : 0;
-
-        const card = document.createElement('div');
-        card.className = 'bg-white p-5 rounded-3xl border border-gray-100 shadow-xs hover:shadow-md transition cursor-pointer flex flex-col justify-between group relative';
-        card.onclick = () => showSubjectDetail(sub.id);
-        card.innerHTML = `
-          <div>
-            <div class="flex justify-between items-start mb-3">
-              <span class="text-4xl bg-pink-50 group-hover:scale-110 transition transform p-3 rounded-2xl">${sub.emoji}</span>
-              <span class="px-3 py-1 bg-pink-100 text-pink-600 rounded-full text-xs font-medium">${sub.category}</span>
-            </div>
-            <h3 class="font-bold text-lg text-gray-800 mb-1 group-hover:text-pink-500 transition">${sub.name}</h3>
-            <p class="text-xs text-gray-400 mb-2">🗓️️ กำหนดส่ง: ${sub.end}</p>
-            ${sub.alertTime ? `<p class="text-[11px] text-pink-500 font-medium">🔔 แจ้งเตือน: ${sub.alertTime.replace('T', ' ')}</p>` : ''}
-          </div>
-          <div class="mt-4">
-            <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
-              <span>ส่งงานแล้ว (${submitted}/${total} คน)</span>
-              <span>${percent}%</span>
-            </div>
-            <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-              <div class="bg-pink-400 h-full rounded-full transition-all duration-300" style="width: ${percent}%"></div>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-
-      const addCard = document.createElement('div');
-      addCard.onclick = () => openModal('addSubjectModal');
-      addCard.className = 'border-2 border-dashed border-pink-200 bg-pink-50/30 hover:bg-pink-50 p-5 rounded-3xl flex flex-col items-center justify-center cursor-pointer transition min-h-[200px] text-pink-400 hover:text-pink-500';
-      addCard.innerHTML = `
-        <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl shadow-xs mb-2">+</div>
-        <p class="font-medium text-sm">กดที่นี่เพื่อเพิ่มวิชาใหม่</p>
-      `;
-      grid.appendChild(addCard);
-    }
-
-    function showSubjectDetail(id) {
-      currentSubjectId = id;
-      const sub = subjects.find(s => s.id === id);
-      if (!sub) return;
-
-      document.getElementById('detailEmoji').textContent = sub.emoji;
-      document.getElementById('detailTitle').textContent = sub.name;
-      document.getElementById('detailDates').textContent = `🗓️ สิ้นสุดกำหนดส่ง: ${sub.end}`;
-
-      document.getElementById('subjectGridView').classList.add('hidden');
-      document.getElementById('subjectDetailView').classList.remove('hidden');
-
-      renderStudentList();
-    }
-
-    function hideSubjectDetail() {
-      document.getElementById('subjectGridView').classList.remove('hidden');
-      document.getElementById('subjectDetailView').classList.add('hidden');
-      renderSubjects();
-    }
-
-    function renderStudentList() {
-      const container = document.getElementById('studentList');
-      container.innerHTML = '';
-
-      if (!submissionStatus[currentSubjectId]) {
-        submissionStatus[currentSubjectId] = {};
-      }
-      const currentStatus = submissionStatus[currentSubjectId];
-      let submittedCount = 0;
-
-      if (students.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-8 text-gray-400 text-sm">
-            ยังไม่มีรายชื่อเพื่อนในวิชานี้ กดปุ่ม <b>"+ เพิ่มเพื่อนในห้อง"</b> ด้านบนเพื่อเริ่มใส่รายชื่อได้เลยครับ
-          </div>
-        `;
-      } else {
-        students.sort((a, b) => a.no - b.no);
-
-        students.forEach(std => {
-          const isSubmitted = !!currentStatus[std.id];
-          if (isSubmitted) submittedCount++;
-
-          const item = document.createElement('div');
-          item.className = `p-3.5 rounded-2xl border transition flex justify-between items-center ${
-            isSubmitted ? 'bg-emerald-50/60 border-emerald-200' : 'bg-gray-50/60 border-gray-100'
-          }`;
-
-          item.innerHTML = `
-            <div class="flex items-center gap-3">
-              <span class="w-8 h-8 rounded-xl bg-white flex items-center justify-center font-bold text-xs ${
-                isSubmitted ? 'text-emerald-600 shadow-xs' : 'text-gray-400'
-              }">
-                ${std.no}
-              </span>
-              <span class="font-medium text-sm ${isSubmitted ? 'text-emerald-900 line-through decoration-emerald-300' : 'text-gray-700'}">
-                ${std.name}
-              </span>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="toggleSubmit(${std.id})" class="px-4 py-1.5 rounded-xl text-xs font-semibold shadow-xs transition ${
-                isSubmitted 
-                  ? 'bg-emerald-500 text-white hover:bg-emerald-600' 
-                  : 'bg-white border border-rose-200 text-rose-500 hover:bg-rose-50'
-              }">
-                ${isSubmitted ? '✓ ส่งแล้ว' : '✕ ยังไม่ส่ง'}
-              </button>
-              <button onclick="deleteStudent(${std.id})" class="w-8 h-8 bg-rose-50 hover:bg-rose-100 text-rose-400 hover:text-rose-600 rounded-xl flex items-center justify-center transition text-sm">
-                🗑️
-              </button>
-            </div>
-          `;
-          container.appendChild(item);
-        });
-      }
-
-      document.getElementById('totalCount').textContent = students.length;
-      document.getElementById('submittedCount').textContent = submittedCount;
-      document.getElementById('pendingCount').textContent = students.length - submittedCount;
-    }
-
-    function toggleSubmit(studentId) {
-      submissionStatus[currentSubjectId][studentId] = !submissionStatus[currentSubjectId][studentId];
-      renderStudentList();
-    }
-
-    function deleteStudent(studentId) {
-      if (confirm('คุณแน่ใจไหมว่าต้องการลบรายชื่อเพื่อนคนนี้?')) {
-        students = students.filter(s => s.id !== studentId);
-        if (submissionStatus[currentSubjectId]) {
-          delete submissionStatus[currentSubjectId][studentId];
-        }
-        renderStudentList();
-      }
-    }
-
-    function createSubject(e) {
-      e.preventDefault();
-      const newSub = {
-        id: Date.now(),
-        name: document.getElementById('subName').value,
-        emoji: document.getElementById('subEmoji').value || '📖',
-        category: document.getElementById('subCategory').value || 'ทั่วไป',
-        start: document.getElementById('subStart').value,
-        end: document.getElementById('subEnd').value,
-        alertTime: document.getElementById('subAlertTime').value,
-        alerted: false
-      };
-      subjects.push(newSub);
-      closeModal('addSubjectModal');
-      renderSubjects();
-      e.target.reset();
-    }
-
-    function createStudent(e) {
-      e.preventDefault();
-      const newStd = {
-        id: Date.now(),
-        no: parseInt(document.getElementById('stdNo').value),
-        name: document.getElementById('stdName').value
-      };
-      students.push(newStd);
-      closeModal('addStudentModal');
-      renderStudentList();
-      e.target.reset();
-    }
-
-    // คัดลอกข้อความทวงงานเข้า LINE (ไม่รวมชื่อ Account ตามที่ขอ)
-    function copyUnsentList() {
-      const sub = subjects.find(s => s.id === currentSubjectId);
-      const currentStatus = submissionStatus[currentSubjectId] || {};
-      const unsentStudents = students.filter(std => !currentStatus[std.id]);
-
-      if (students.length === 0) {
-        alert('ยังไม่มีรายชื่อเพื่อนเลยครับ กรุณาเพิ่มรายชื่อเพื่อนก่อนนะ');
-        return;
-      }
-
-      if (unsentStudents.length === 0) {
-        alert('🎉 เย้! เพื่อนทุกคนส่งงานวิชานี้ครบเรียบร้อยแล้วครับ');
-        return;
-      }
-
-      let text = `📢 **แจ้งเตือนการบ้านวิชา ${sub ? sub.name : ''}** ${sub ? sub.emoji : ''}\n`;
-      text += `⏰ กำหนดส่ง: ${sub ? sub.end : ''}\n`;
-      text += `----------------------------------\n`;
-      text += `⚠️ เพื่อนๆ ที่ยังไม่ได้ส่งงาน (${unsentStudents.length} คน):\n`;
-      
-      unsentStudents.forEach(std => {
-        text += `• เลขที่ ${std.no} : ${std.name}\n`;
-      });
-      
-      text += `----------------------------------\n`;
-      text += `👉 รบกวนรีบส่งงานด้วยนะค้าบ ✨`;
-
-      navigator.clipboard.writeText(text).then(() => {
-        alert('📋 คัดลอกข้อความทวงงานเรียบร้อยแล้ว! นำไปวางส่งในกลุ่ม LINE ได้เลยครับ');
-      });
-    }
-
-    // --- TAB 2: Calendar & Homework Functions ---
-    function renderCalendar() {
-      const calendarEl = document.getElementById('calendarContainer');
-      if (!calendarEl) return;
-
-      if (!calendarObj) {
-        calendarObj = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          locale: 'th',
-          headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: ''
-          },
-          dateClick: function(info) {
-            document.getElementById('hwDueDate').value = info.dateStr;
-            openModal('addHwModal');
-          },
-          events: homeworks.map(hw => ({
-            title: hw.title,
-            start: hw.dueDate,
-            color: '#f472b6'
-          }))
-        });
-        calendarObj.render();
-      } else {
-        calendarObj.removeAllEvents();
-        calendarObj.addEventSource(homeworks.map(hw => ({
-          title: hw.title,
-          start: hw.dueDate,
-          color: '#f472b6'
-        })));
-        calendarObj.render();
-      }
-    }
-
-    function renderHomeworks() {
-      const container = document.getElementById('hwList');
-      container.innerHTML = '';
-
-      if (homeworks.length === 0) {
-        container.innerHTML = `<p class="text-sm text-gray-400 text-center py-6">ไม่มีรายการการบ้านที่จดไว้</p>`;
-        return;
-      }
-
-      homeworks.forEach(hw => {
-        const item = document.createElement('div');
-        item.className = 'p-4 rounded-2xl bg-pink-50/50 border border-pink-100 flex justify-between items-center';
-        item.innerHTML = `
-          <div>
-            <h4 class="font-bold text-gray-800">${hw.title}</h4>
-            <p class="text-xs text-gray-500 mt-1">${hw.detail || ''}</p>
-            <span class="inline-block mt-2 px-2.5 py-0.5 bg-pink-200 text-pink-700 rounded-md text-[10px] font-semibold">
-              ⏰ ส่งวันที่: ${hw.dueDate}
-            </span>
-          </div>
-          <button onclick="deleteHomework(${hw.id})" class="text-rose-400 hover:text-rose-600 text-sm">🗑️ ลบ</button>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-    function createHomework(e) {
-      e.preventDefault();
-      const newHw = {
-        id: Date.now(),
-        title: document.getElementById('hwTitle').value,
-        dueDate: document.getElementById('hwDueDate').value,
-        detail: document.getElementById('hwDetail').value
-      };
-      homeworks.push(newHw);
-      closeModal('addHwModal');
-      renderHomeworks();
-      if (calendarObj) renderCalendar();
-      e.target.reset();
-    }
-
-    function deleteHomework(id) {
-      homeworks = homeworks.filter(h => h.id !== id);
-      renderHomeworks();
-      if (calendarObj) renderCalendar();
-    }
-
-    // --- TAB 3: Study Timer Functions ---
-    function setTimerMode(mode) {
-      timerMode = mode;
-      pauseTimer();
-
-      const studyBtn = document.getElementById('modeStudyBtn');
-      const breakBtn = document.getElementById('modeBreakBtn');
-      const label = document.getElementById('timerStatusLabel');
-
-      if (mode === 'study') {
-        studyBtn.className = "px-5 py-2 rounded-2xl font-medium text-sm bg-pink-400 text-white shadow-sm transition";
-        breakBtn.className = "px-5 py-2 rounded-2xl font-medium text-sm bg-gray-100 text-gray-600 hover:bg-gray-200 transition";
-        label.textContent = "เตรียมพร้อมโฟกัสอ่านหนังสือ";
-        const mins = parseInt(document.getElementById('inputStudyMin').value) || 25;
-        timeLeft = mins * 60;
-      } else {
-        breakBtn.className = "px-5 py-2 rounded-2xl font-medium text-sm bg-emerald-400 text-white shadow-sm transition";
-        studyBtn.className = "px-5 py-2 rounded-2xl font-medium text-sm bg-gray-100 text-gray-600 hover:bg-gray-200 transition";
-        label.textContent = "ได้เวลาพักผ่อนสายตา";
-        const mins = parseInt(document.getElementById('inputBreakMin').value) || 5;
-        timeLeft = mins * 60;
-      }
-      updateTimerDisplay();
-    }
-
-    function applyTimerSettings() {
-      setTimerMode(timerMode);
-      alert('ปรับเวลาเรียบร้อยแล้วครับ!');
-    }
-
-    function updateTimerDisplay() {
-      const minutes = Math.floor(timeLeft / 60);
-      const seconds = timeLeft % 60;
-      document.getElementById('timerDisplay').textContent = 
-        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    function startTimer() {
-      if (timerInterval) return;
-
-      document.getElementById('btnStartTimer').classList.add('opacity-50', 'pointer-events-none');
-
-      timerInterval = setInterval(() => {
-        if (timeLeft > 0) {
-          timeLeft--;
-          updateTimerDisplay();
-        } else {
-          clearInterval(timerInterval);
-          timerInterval = null;
-          document.getElementById('btnStartTimer').classList.remove('opacity-50', 'pointer-events-none');
-
-          if (timerMode === 'study') {
-            const studyMins = parseInt(document.getElementById('inputStudyMin').value) || 25;
-            totalMinutesStudied += studyMins;
-            
-            const now = new Date();
-            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-            studyHistory.unshift({ minutes: studyMins, time: timeStr });
-
-            renderStudyHistory();
-            alert('🎉 หมดเวลาอ่านหนังสือแล้วครับ! พักผ่อนสักครู่นะ');
-            setTimerMode('break');
-          } else {
-            alert('⏰ หมดเวลาพักผ่อนแล้วครับ! พร้อมกลับไปอ่านหนังสือหรือยัง?');
-            setTimerMode('study');
-          }
-        }
-      }, 1000);
-    }
-
-    function pauseTimer() {
-      if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        document.getElementById('btnStartTimer').classList.remove('opacity-50', 'pointer-events-none');
-      }
-    }
-
-    function resetTimer() {
-      pauseTimer();
-      setTimerMode(timerMode);
-    }
-
-    function renderStudyHistory() {
-      document.getElementById('totalStudyTime').textContent = `${totalMinutesStudied} นาที`;
-
-      const list = document.getElementById('studyHistoryList');
-      list.innerHTML = '';
-
-      if (studyHistory.length === 0) {
-        list.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">ยังไม่มีประวัติการอ่านหนังสือ</p>`;
-        return;
-      }
-
-      studyHistory.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'flex justify-between items-center text-xs bg-pink-50/70 p-2.5 rounded-xl border border-pink-100';
-        div.innerHTML = `
-          <span class="font-medium text-pink-700">📖 อ่านหนังสือสำเร็จ</span>
-          <span class="text-gray-500">${item.minutes} นาที (${item.time} น.)</span>
-        `;
-        list.appendChild(div);
-      });
-    }
-
-    function clearStudyHistory() {
-      if (confirm('ต้องการล้างประวัติสถิติการอ่านหนังสือทั้งหมดหรือไม่?')) {
-        studyHistory = [];
-        totalMinutesStudied = 0;
-        renderStudyHistory();
-      }
-    }
-
-    // --- TAB 4: Account Functions ---
-    function saveProfile() {
-      userProfile.name = document.getElementById('accName').value;
-      userProfile.class = document.getElementById('accClass').value;
-      userProfile.role = document.getElementById('accRole').value;
-
-      document.getElementById('sideProfileName').textContent = userProfile.name;
-      document.getElementById('sideProfileClass').textContent = userProfile.class;
-
-      alert('💾 บันทึกข้อมูลส่วนตัวเรียบร้อยแล้ว!');
-    }
-
-    // --- Modal Helpers ---
-    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-    // Initial Load
-    renderSubjects();
-    updateTimerDisplay();
-  </script>
+    </script>
 </body>
 </html>
